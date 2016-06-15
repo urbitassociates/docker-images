@@ -6,7 +6,9 @@ MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 RUN apk add --no-cache \
 		git \
 		openssh-client \
-		py-pip
+		py-pip \
+		curl \
+		lynx
 
 # Install Docker Compose
 RUN pip install docker-compose
