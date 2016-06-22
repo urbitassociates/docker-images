@@ -13,4 +13,6 @@ RUN docker-php-ext-install \
 
 CMD ["php-fpm"]
 
+WORKDIR /var/www/application
+
 EXPOSE 9000

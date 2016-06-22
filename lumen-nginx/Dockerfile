@@ -15,4 +15,6 @@ RUN usermod -u 1000 www-data
 
 CMD ["nginx"]
 
+WORKDIR /var/www/application
+
 EXPOSE 80 443
