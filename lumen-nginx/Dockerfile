@@ -13,6 +13,9 @@ RUN addgroup -S www-data
 RUN adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx www-data
 RUN usermod -u 1000 www-data
 
+RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stderr /var/log/nginx/error.log
+
 CMD ["nginx"]
 
 WORKDIR /var/www/application
