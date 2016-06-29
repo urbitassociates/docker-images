@@ -7,7 +7,17 @@ ADD lumen.conf /etc/nginx/sites-available/
 
 RUN echo "upstream php-upstream { server php-fpm:9000; }" > /etc/nginx/conf.d/upstream.conf
 
-RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ add shadow
+# Install dependencies
+RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ add \
+    curl \
+    shadow
+
+# Remove dependencies
+RUN apk --no-cache del \
+    wget
+
+# Clean up
+RUN rm -rf /var/cache/apk/* /tmp/*
 
 RUN addgroup -S www-data
 RUN adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx www-data
