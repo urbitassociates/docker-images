@@ -1,0 +1,3 @@
+[submodule "dockerhub-webhook-listener"]
+	path = dockerhub-webhook-listener
+	url = https://github.com/mandrean/dockerhub-webhook-listener.git
