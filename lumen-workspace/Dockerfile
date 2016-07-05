@@ -21,3 +21,5 @@ RUN curl -sSL http://getcomposer.org/installer | php \
 RUN rm -rf /var/cache/apk/* /tmp/*
 
 WORKDIR /var/www/application
+
+CMD true
