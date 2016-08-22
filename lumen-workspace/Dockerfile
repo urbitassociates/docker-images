@@ -7,7 +7,13 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     php7-sockets \
     curl \
     nodejs \
-    git
+    git \
+    php7-gd \
+    php7-zlib \
+    libpng \
+    libpng-dev \
+    libjpeg-turbo \
+    libjpeg-turbo-dev
 
 # Remove dependencies
 RUN apk --no-cache del \
@@ -18,10 +24,15 @@ RUN curl -sSL http://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && chmod +x /usr/local/bin/composer
 
+RUN docker-php-ext-configure gd \
+    --with-png-dir=/usr/include/ \
+    --with-jpeg-dir=/usr/include/
+
 # Install extensions using the helper script provided by the base image
 RUN docker-php-ext-install \
     pdo_mysql \
-    sockets
+    sockets \
+    gd
 
 # Clean up
 RUN rm -rf /var/cache/apk/* /tmp/*
