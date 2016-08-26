@@ -23,7 +23,6 @@ RUN apk --update add \
     && rm -rf /var/cache/apk/*
 
 RUN ln -sf /dev/stdout /var/log/vsftpd.log
-RUN mkdir -p ${VSFTP_S3_MOUNTPOINT}
 
 COPY vsftpd.conf /etc/vsftpd/vsftpd.conf
 COPY ssl.conf /etc/vsftpd/ssl.conf
