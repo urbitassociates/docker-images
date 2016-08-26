@@ -1,5 +1,5 @@
 #!/bin/sh
-
+mkdir -p ${VSFTP_S3_MOUNTPOINT}
 if [ -n ${SSL_CERTIFICATE+x} ]
     then
         mkdir -p /var/cert
