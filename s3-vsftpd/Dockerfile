@@ -4,7 +4,7 @@ MAINTAINER Simon Forsman <simon@urb-it.com>
 ENV REFRESHED_AT 20160823
 
 ENV S3FS_VERSION 1.79
-RUN apk --update add \
+RUN apk --update --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     fuse \
     alpine-sdk \
     linux-pam \
