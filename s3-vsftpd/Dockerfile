@@ -11,6 +11,7 @@ RUN apk --update add \
     automake \
     autoconf \
     libxml2-dev \
+    shadow \
     fuse-dev \
     curl-dev \
     vsftpd \
