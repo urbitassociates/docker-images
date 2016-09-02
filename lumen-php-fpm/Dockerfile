@@ -12,20 +12,20 @@ ENV PHP_API_VERSION 20151012
 ENV NEWRELIC_VERSION 6.4.0.163
 
 # Install dependencies
-RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ add \
+RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-sockets \
     php7-gd \
     php7-zlib \
+    php7-intl \
     ca-certificates \
     libpng \
     libpng-dev \
     libjpeg-turbo \
     libjpeg-turbo-dev \
-    curl
-
-# Remove dependencies
-RUN apk --no-cache del \
-    wget
+    execline \
+    curl \
+    icu \
+    icu-dev
 
 # Download & Install New Relic
 RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-$NEWRELIC_VERSION-linux-musl.tar.gz | tar xzf -
@@ -35,20 +35,22 @@ RUN mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/daemon/newrelic-daemon.x64 /
 RUN chmod 775 /usr/bin/newrelic-daemon
 RUN mkdir /var/log/newrelic
 
+# Configure & install extensions using the helper script provided by the base image
 RUN docker-php-ext-configure gd \
-    --with-png-dir=/usr/include/ \
-    --with-jpeg-dir=/usr/include/
-
-# Install extensions using the helper script provided by the base image
+        --with-png-dir=/usr/include/ \
+        --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-configure intl
 RUN docker-php-ext-install \
     pdo_mysql \
     sockets \
-    gd
+    gd \
+    intl
 
-# Clean up
+# Remove unneeded dependencies & clean up
+RUN apk --no-cache del \
+    wget \
+    icu-dev
 RUN rm -rf /var/cache/apk/* /tmp/* ./newrelic-php5-$NEWRELIC_VERSION-linux-musl*
-
-# RUN usermod -u 1000 www-data
 
 CMD sh -c "newrelic-daemon && php-fpm"
 
