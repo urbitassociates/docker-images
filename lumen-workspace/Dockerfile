@@ -15,7 +15,6 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     libpng-dev \
     libjpeg-turbo \
     libjpeg-turbo-dev \
-    execline \
     icu \
     icu-dev
 
