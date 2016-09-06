@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM nginx:1.10.0-alpine
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
