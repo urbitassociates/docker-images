@@ -7,9 +7,6 @@ ADD ./lumen.ini /usr/local/etc/php/conf.d
 ADD ./lumen.pool.conf /usr/local/etc/php-fpm.d/
 ADD ./newrelic.ini /usr/local/etc/php/conf.d
 
-# Add task scheduler to crontab
-CMD printf "# Lumen task scheduler\n*       *       *       *       *       php /var/www/application/artisan schedule:run >> /dev/null 2>&1\n\n" >> /etc/crontabs/root
-
 # Environment variables
 ENV PHP_API_VERSION 20151012
 ENV NEWRELIC_VERSION 6.4.0.163

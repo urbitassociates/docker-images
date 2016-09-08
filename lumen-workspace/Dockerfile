@@ -36,6 +36,10 @@ RUN docker-php-ext-install \
     gd \
     intl
 
+# Run Lumen Scheduler crontab
+ADD lumen-scheduler.crontab /lumen-scheduler.crontab
+RUN /usr/bin/crontab /lumen-scheduler.crontab
+
 # Remove dependencies
 RUN apk --no-cache del \
     wget \
@@ -46,4 +50,4 @@ RUN rm -rf /var/cache/apk/* /tmp/*
 
 WORKDIR /var/www/application
 
-CMD true
+CMD crond -l 2 -f
