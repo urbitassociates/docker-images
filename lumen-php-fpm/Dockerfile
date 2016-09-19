@@ -9,7 +9,7 @@ ADD ./newrelic.ini /usr/local/etc/php/conf.d
 
 # Environment variables
 ENV PHP_API_VERSION 20151012
-ENV NEWRELIC_VERSION 6.4.0.163
+ENV NEWRELIC_VERSION 6.6.1.172
 
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
