@@ -18,6 +18,9 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     libjpeg-turbo-dev \
     imagemagick-dev \
     imagemagick \
+    autoconf \
+    build-base \
+    libtool \
     openssl \
     icu \
     icu-dev
@@ -56,6 +59,9 @@ RUN apk --no-cache del \
     imagemagick-dev \
     libpng-dev \
     libjpeg-turbo-dev \
+    autoconf \
+    build-base \
+    libtool \
     openssl
 
 # Clean up
