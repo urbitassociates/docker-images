@@ -17,6 +17,7 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     php7-gd \
     php7-zlib \
     php7-intl \
+    php7-opcache \
     ca-certificates \
     libpng \
     libpng-dev \
@@ -43,7 +44,8 @@ RUN docker-php-ext-install \
     pdo_mysql \
     sockets \
     gd \
-    intl
+    intl \
+    opcache
 
 # Remove unneeded dependencies & clean up
 RUN apk --no-cache del \
