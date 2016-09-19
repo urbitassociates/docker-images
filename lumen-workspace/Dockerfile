@@ -2,19 +2,23 @@ FROM php:7.0-alpine
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
+ARG IMAGICK_EXT_VERSION=3.4.2
+
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-sockets \
     curl \
     nodejs \
     git \
-    php7-gd \
     php7-zlib \
     php7-intl \
     libpng \
     libpng-dev \
     libjpeg-turbo \
     libjpeg-turbo-dev \
+    imagemagick-dev \
+    imagemagick \
+    openssl \
     icu \
     icu-dev
 
@@ -40,10 +44,19 @@ RUN docker-php-ext-install \
 ADD lumen-scheduler.crontab /lumen-scheduler.crontab
 RUN /usr/bin/crontab /lumen-scheduler.crontab
 
+RUN cd /tmp && wget -q https://pecl.php.net/get/imagick-${IMAGICK_EXT_VERSION}.tgz \
+ && tar xzf imagick-${IMAGICK_EXT_VERSION}.tgz && cd imagick-${IMAGICK_EXT_VERSION} \
+ && phpize && ./configure && make && make install \
+ && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/00_imagick.ini
+
 # Remove dependencies
 RUN apk --no-cache del \
     wget \
-    icu-dev
+    icu-dev \
+    imagemagick-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    openssl
 
 # Clean up
 RUN rm -rf /var/cache/apk/* /tmp/*

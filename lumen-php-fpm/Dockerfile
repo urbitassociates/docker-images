@@ -11,10 +11,11 @@ ADD ./newrelic.ini /usr/local/etc/php/conf.d
 ENV PHP_API_VERSION 20151012
 ENV NEWRELIC_VERSION 6.4.0.163
 
+ARG IMAGICK_EXT_VERSION=3.4.2
+
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-sockets \
-    php7-gd \
     php7-zlib \
     php7-intl \
     ca-certificates \
@@ -22,7 +23,13 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     libpng-dev \
     libjpeg-turbo \
     libjpeg-turbo-dev \
+    imagemagick-dev \
+    imagemagick \
+    autoconf \
+    build-base \
+    libtool \
     curl \
+    openssl \
     icu \
     icu-dev
 
@@ -34,21 +41,30 @@ RUN mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/daemon/newrelic-daemon.x64 /
 RUN chmod 775 /usr/bin/newrelic-daemon
 RUN mkdir /var/log/newrelic
 
-# Configure & install extensions using the helper script provided by the base image
-RUN docker-php-ext-configure gd \
-        --with-png-dir=/usr/include/ \
-        --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-install \
     pdo_mysql \
     sockets \
-    gd \
     intl
+
+RUN cd /tmp && wget -q https://pecl.php.net/get/imagick-${IMAGICK_EXT_VERSION}.tgz \
+ && tar xzf imagick-${IMAGICK_EXT_VERSION}.tgz && cd imagick-${IMAGICK_EXT_VERSION} \
+ && phpize && ./configure && make && make install \
+ && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/00_imagick.ini
 
 # Remove unneeded dependencies & clean up
 RUN apk --no-cache del \
     wget \
-    icu-dev
+    icu-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    imagemagick-dev \
+    tar \
+    autoconf \
+    build-base \
+    openssl \
+    libtool
+
 RUN rm -rf /var/cache/apk/* /tmp/* ./newrelic-php5-$NEWRELIC_VERSION-linux-musl*
 
 CMD sh -c "newrelic-daemon && php-fpm"
