@@ -11,6 +11,7 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     php7-gd \
     php7-zlib \
     php7-intl \
+    php7-opcache \
     libpng \
     libpng-dev \
     libjpeg-turbo \
@@ -34,7 +35,8 @@ RUN docker-php-ext-install \
     pdo_mysql \
     sockets \
     gd \
-    intl
+    intl \
+    opcache
 
 # Run Lumen Scheduler crontab
 ADD lumen-scheduler.crontab /lumen-scheduler.crontab
