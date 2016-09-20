@@ -5,6 +5,7 @@ MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-sockets \
+    php7-gd \
     curl \
     nodejs \
     git \
