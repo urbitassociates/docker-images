@@ -8,7 +8,6 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     curl \
     nodejs \
     git \
-    php7-gd \
     php7-zlib \
     php7-intl \
     php7-opcache \
@@ -16,6 +15,12 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     libpng-dev \
     libjpeg-turbo \
     libjpeg-turbo-dev \
+    imagemagick-dev \
+    imagemagick \
+    autoconf \
+    build-base \
+    libtool \
+    openssl \
     icu \
     icu-dev
 
@@ -31,12 +36,15 @@ RUN docker-php-ext-configure gd \
 RUN docker-php-ext-configure intl
 
 # Install extensions using the helper script provided by the base image
-RUN docker-php-ext-install \
-    pdo_mysql \
-    sockets \
-    gd \
-    intl \
-    opcache
+
+RUN pecl install imagick \
+    && docker-php-ext-install \
+        pdo_mysql \
+        sockets \
+        gd \
+        intl \
+        opcache \
+    && docker-php-ext-enable imagick
 
 # Run Lumen Scheduler crontab
 ADD lumen-scheduler.crontab /lumen-scheduler.crontab
@@ -45,7 +53,14 @@ RUN /usr/bin/crontab /lumen-scheduler.crontab
 # Remove dependencies
 RUN apk --no-cache del \
     wget \
-    icu-dev
+    icu-dev \
+    imagemagick-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    autoconf \
+    build-base \
+    libtool \
+    openssl
 
 # Clean up
 RUN rm -rf /var/cache/apk/* /tmp/*
