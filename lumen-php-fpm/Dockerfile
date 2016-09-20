@@ -13,6 +13,7 @@ ENV NEWRELIC_VERSION 6.6.1.172
 
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
+    php7-gd \
     php7-sockets \
     php7-zlib \
     php7-intl \
@@ -42,10 +43,15 @@ RUN mkdir /var/log/newrelic
 
 RUN docker-php-ext-configure intl
 
+RUN docker-php-ext-configure gd \
+    --with-png-dir=/usr/include/ \
+    --with-jpeg-dir=/usr/include/
+
 RUN pecl install imagick \
     && docker-php-ext-install \
         pdo_mysql \
         sockets \
+        gd \
         intl \
         opcache \
     && docker-php-ext-enable imagick
