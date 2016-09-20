@@ -10,6 +10,7 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     git \
     php7-zlib \
     php7-intl \
+    php7-opcache \
     libpng \
     libpng-dev \
     libjpeg-turbo \
@@ -35,12 +36,14 @@ RUN docker-php-ext-configure gd \
 RUN docker-php-ext-configure intl
 
 # Install extensions using the helper script provided by the base image
+
 RUN pecl install imagick \
     && docker-php-ext-install \
         pdo_mysql \
         sockets \
         gd \
         intl \
+        opcache \
     && docker-php-ext-enable imagick
 
 # Run Lumen Scheduler crontab

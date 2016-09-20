@@ -9,13 +9,14 @@ ADD ./newrelic.ini /usr/local/etc/php/conf.d
 
 # Environment variables
 ENV PHP_API_VERSION 20151012
-ENV NEWRELIC_VERSION 6.4.0.163
+ENV NEWRELIC_VERSION 6.6.1.172
 
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-sockets \
     php7-zlib \
     php7-intl \
+    php7-opcache \
     ca-certificates \
     libpng \
     libpng-dev \
@@ -40,13 +41,14 @@ RUN chmod 775 /usr/bin/newrelic-daemon
 RUN mkdir /var/log/newrelic
 
 RUN docker-php-ext-configure intl
+
 RUN pecl install imagick \
     && docker-php-ext-install \
         pdo_mysql \
         sockets \
         intl \
+        opcache \
     && docker-php-ext-enable imagick
-
 
 # Remove unneeded dependencies & clean up
 RUN apk --no-cache del \
