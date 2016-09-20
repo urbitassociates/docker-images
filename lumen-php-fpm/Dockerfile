@@ -14,7 +14,6 @@ ENV NEWRELIC_VERSION 6.6.1.172
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-sockets \
-    php7-gd \
     php7-zlib \
     php7-intl \
     php7-opcache \
@@ -23,7 +22,13 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     libpng-dev \
     libjpeg-turbo \
     libjpeg-turbo-dev \
+    imagemagick-dev \
+    imagemagick \
+    autoconf \
+    build-base \
+    libtool \
     curl \
+    openssl \
     icu \
     icu-dev
 
@@ -35,22 +40,29 @@ RUN mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/daemon/newrelic-daemon.x64 /
 RUN chmod 775 /usr/bin/newrelic-daemon
 RUN mkdir /var/log/newrelic
 
-# Configure & install extensions using the helper script provided by the base image
-RUN docker-php-ext-configure gd \
-        --with-png-dir=/usr/include/ \
-        --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-configure intl
-RUN docker-php-ext-install \
-    pdo_mysql \
-    sockets \
-    gd \
-    intl \
-    opcache
+
+RUN pecl install imagick \
+    && docker-php-ext-install \
+        pdo_mysql \
+        sockets \
+        intl \
+        opcache \
+    && docker-php-ext-enable imagick
 
 # Remove unneeded dependencies & clean up
 RUN apk --no-cache del \
     wget \
-    icu-dev
+    icu-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    imagemagick-dev \
+    tar \
+    autoconf \
+    build-base \
+    openssl \
+    libtool
+
 RUN rm -rf /var/cache/apk/* /tmp/* ./newrelic-php5-$NEWRELIC_VERSION-linux-musl*
 
 CMD sh -c "newrelic-daemon && php-fpm"
