@@ -11,8 +11,6 @@ ADD ./newrelic.ini /usr/local/etc/php/conf.d
 ENV PHP_API_VERSION 20151012
 ENV NEWRELIC_VERSION 6.4.0.163
 
-ARG IMAGICK_EXT_VERSION=3.4.2
-
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-sockets \
@@ -42,15 +40,13 @@ RUN chmod 775 /usr/bin/newrelic-daemon
 RUN mkdir /var/log/newrelic
 
 RUN docker-php-ext-configure intl
-RUN docker-php-ext-install \
-    pdo_mysql \
-    sockets \
-    intl
+RUN pecl install imagick \
+    && docker-php-ext-install \
+        pdo_mysql \
+        sockets \
+        intl \
+    && docker-php-ext-enable imagick
 
-RUN cd /tmp && wget -q https://pecl.php.net/get/imagick-${IMAGICK_EXT_VERSION}.tgz \
- && tar xzf imagick-${IMAGICK_EXT_VERSION}.tgz && cd imagick-${IMAGICK_EXT_VERSION} \
- && phpize && ./configure && make && make install \
- && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/00_imagick.ini
 
 # Remove unneeded dependencies & clean up
 RUN apk --no-cache del \

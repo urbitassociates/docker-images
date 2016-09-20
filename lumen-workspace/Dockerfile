@@ -2,8 +2,6 @@ FROM php:7.0-alpine
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
-ARG IMAGICK_EXT_VERSION=3.4.2
-
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-sockets \
@@ -37,20 +35,17 @@ RUN docker-php-ext-configure gd \
 RUN docker-php-ext-configure intl
 
 # Install extensions using the helper script provided by the base image
-RUN docker-php-ext-install \
-    pdo_mysql \
-    sockets \
-    gd \
-    intl
+RUN pecl install imagick \
+    && docker-php-ext-install \
+        pdo_mysql \
+        sockets \
+        gd \
+        intl \
+    && docker-php-ext-enable imagick
 
 # Run Lumen Scheduler crontab
 ADD lumen-scheduler.crontab /lumen-scheduler.crontab
 RUN /usr/bin/crontab /lumen-scheduler.crontab
-
-RUN cd /tmp && wget -q https://pecl.php.net/get/imagick-${IMAGICK_EXT_VERSION}.tgz \
- && tar xzf imagick-${IMAGICK_EXT_VERSION}.tgz && cd imagick-${IMAGICK_EXT_VERSION} \
- && phpize && ./configure && make && make install \
- && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/00_imagick.ini
 
 # Remove dependencies
 RUN apk --no-cache del \
