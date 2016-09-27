@@ -2,16 +2,21 @@ FROM php:7.0-alpine
 
 MAINTAINER Simon Forsman <simon@urb-it.com>
 
+# Add configs
+ADD ./lumen.ini /usr/local/etc/php/conf.d
+
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-sockets \
     php7-gd \
+    php7-opcache \
     curl \
     nodejs \
     git \
     php7-zlib \
     php7-intl \
     php7-opcache \
+    ca-certificates \
     libpng \
     libpng-dev \
     libjpeg-turbo \
