@@ -1,1 +1,0 @@
-*       *       *       *       *       php /var/www/application/artisan queue:work --timeout=0
