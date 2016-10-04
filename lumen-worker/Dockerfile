@@ -4,6 +4,11 @@ MAINTAINER Simon Forsman <simon@urb-it.com>
 
 # Add configs
 ADD ./lumen.ini /usr/local/etc/php/conf.d
+ADD ./worker.conf /etc/supervisor/worker.conf
+
+ENV PYTHON_VERSION=2.7.12-r0
+ENV PY_PIP_VERSION=8.1.2-r0
+ENV SUPERVISOR_VERSION=3.3.0
 
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
@@ -28,7 +33,12 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     libtool \
     openssl \
     icu \
-    icu-dev
+    icu-dev \
+    python=$PYTHON_VERSION \
+    py-pip=$PY_PIP_VERSION
+
+# Install supervisor
+RUN pip install supervisor==$SUPERVISOR_VERSION
 
 # Configure & install extensions using the helper script provided by the base image
 RUN docker-php-ext-configure gd \
@@ -47,10 +57,6 @@ RUN pecl install imagick \
         opcache \
     && docker-php-ext-enable imagick
 
-# Run Lumen Worker crontab
-ADD lumen-worker.crontab /lumen-worker.crontab
-RUN /usr/bin/crontab /lumen-worker.crontab
-
 # Remove dependencies
 RUN apk --no-cache del \
     wget \
@@ -68,4 +74,4 @@ RUN rm -rf /var/cache/apk/* /tmp/*
 
 WORKDIR /var/www/application
 
-CMD crond -l 2 -f
+CMD sh -c "supervisord --nodaemon --configuration /etc/supervisor/worker.conf"
