@@ -8,7 +8,8 @@ RUN apt-get -y update \
 	ocaml \
 	libelf-dev \
  && npm i -g \
-	yarn
+	yarn \
+	phantomjs
 
 # Clean up
 RUN rm -rf /var/cache/apt/archives
