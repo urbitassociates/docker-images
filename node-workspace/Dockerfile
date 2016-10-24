@@ -1,4 +1,4 @@
-FROM node:6.8-slim
+FROM node:6.8
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
