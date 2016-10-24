@@ -9,6 +9,7 @@ RUN apt-get -y update \
 	libelf-dev \
  && npm i -g \
 	yarn \
+	webpack \
 	phantomjs
 
 # Clean up
