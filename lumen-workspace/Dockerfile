@@ -31,8 +31,6 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     libtool \
     openssl
 
-# Install 
-
 # Install Composer
 RUN curl -sSL http://getcomposer.org/installer | php \
 && mv composer.phar /usr/local/bin/composer \
