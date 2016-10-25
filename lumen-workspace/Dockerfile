@@ -13,47 +13,15 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     php7-intl \
     php7-opcache \
     libpng \
-    libpng-dev \
     libjpeg-turbo \
-    libjpeg-turbo-dev \
-    imagemagick-dev \
     imagemagick \
-    autoconf \
-    build-base \
-    libtool \
-    openssl \
-    icu \
-    icu-dev
+    icu
+RUN npm i -g \
+    yarn \
+&& npm clean cache
 
-# Install Composer
-RUN curl -sSL http://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
-    && chmod +x /usr/local/bin/composer
-
-# Configure & install extensions using the helper script provided by the base image
-RUN docker-php-ext-configure gd \
-    --with-png-dir=/usr/include/ \
-    --with-jpeg-dir=/usr/include/
-RUN docker-php-ext-configure intl
-
-# Install extensions using the helper script provided by the base image
-
-RUN pecl install imagick \
-    && docker-php-ext-install \
-        pdo_mysql \
-        sockets \
-        gd \
-        intl \
-        opcache \
-    && docker-php-ext-enable imagick
-
-# Run Lumen Scheduler crontab
-ADD lumen-scheduler.crontab /lumen-scheduler.crontab
-RUN /usr/bin/crontab /lumen-scheduler.crontab
-
-# Remove dependencies
-RUN apk --no-cache del \
-    wget \
+# Install build dependencies
+RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add --virtual build-dependencies \
     icu-dev \
     imagemagick-dev \
     libpng-dev \
@@ -63,8 +31,34 @@ RUN apk --no-cache del \
     libtool \
     openssl
 
-# Clean up
-RUN rm -rf /var/cache/apk/* /tmp/*
+# Install Composer
+RUN curl -sSL http://getcomposer.org/installer | php \
+&& mv composer.phar /usr/local/bin/composer \
+&& chmod +x /usr/local/bin/composer
+
+# Install & configure PHP extensions
+RUN pecl install imagick \
+&& docker-php-ext-configure gd \
+    --with-png-dir=/usr/include/ \
+    --with-jpeg-dir=/usr/include/ \
+&& docker-php-ext-configure intl \
+&& docker-php-ext-install \
+    pdo_mysql \
+    sockets \
+    gd \
+    intl \
+    opcache \
+&& docker-php-ext-enable imagick
+
+# Run Lumen Scheduler crontab
+ADD lumen-scheduler.crontab /lumen-scheduler.crontab
+RUN /usr/bin/crontab /lumen-scheduler.crontab
+
+# Remove dependencies & clean up
+RUN apk --no-cache del \
+    wget \
+    build-dependencies \
+&& rm -rf /var/cache/apk/* /tmp/*
 
 WORKDIR /var/www/application
 
