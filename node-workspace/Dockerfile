@@ -2,17 +2,16 @@ FROM node:6.8
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
-# Install dependencies
+# Update, install & clean up dependencies
 RUN apt-get -y update \
- && apt-get -y install \
+&& apt-get -y install \
 	ocaml \
 	libelf-dev \
- && npm i -g \
+&& rm -rf /var/cache/apt/archives
+RUN npm i -g \
 	yarn \
 	webpack \
-	phantomjs
-
-# Clean up
-RUN rm -rf /var/cache/apt/archives
+	phantomjs \
+&& npm clean cache
 
 WORKDIR /home
