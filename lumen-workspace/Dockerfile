@@ -16,6 +16,9 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     libjpeg-turbo \
     imagemagick \
     icu
+RUN npm i -g \
+    yarn \
+&& npm clean cache
 
 # Install build dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add --virtual build-dependencies \
@@ -27,6 +30,8 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     build-base \
     libtool \
     openssl
+
+# Install 
 
 # Install Composer
 RUN curl -sSL http://getcomposer.org/installer | php \
