@@ -30,6 +30,9 @@ RUN curl -sSL http://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && chmod +x /usr/local/bin/composer
 
+# Install composer dependencies
+RUN composer global require "hirak/prestissimo:^0.3"
+
 # Configure & install extensions using the helper script provided by the base image
 RUN docker-php-ext-configure gd \
     --with-png-dir=/usr/include/ \
