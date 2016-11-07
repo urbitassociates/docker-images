@@ -5,7 +5,10 @@ MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 ADD nginx.conf /etc/nginx/
 ADD lumen.conf /etc/nginx/sites-available/
 
-RUN echo "upstream php-upstream { server php-fpm:9000; }" > /etc/nginx/conf.d/upstream.conf
+ARG PHP_UPSTREAM=php-fpm
+
+RUN rm /etc/nginx/conf.d/default.conf \
+&& echo "upstream php-upstream { server ${PHP_UPSTREAM}:9000; }" > /etc/nginx/conf.d/upstream.conf
 
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
