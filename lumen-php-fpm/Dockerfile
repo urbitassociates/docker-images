@@ -29,7 +29,6 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     build-base \
     libtool \
     curl \
-    openssl \
     icu \
     icu-dev
 
@@ -46,6 +45,10 @@ RUN docker-php-ext-configure intl
 RUN docker-php-ext-configure gd \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/
+
+RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add rabbitmq-c rabbitmq-c-dev libressl libressl-dev \
+    && pecl install amqp \
+    && docker-php-ext-enable amqp
 
 RUN pecl install imagick \
     && docker-php-ext-install \
