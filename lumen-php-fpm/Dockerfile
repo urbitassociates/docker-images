@@ -32,6 +32,17 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     icu \
     icu-dev
 
+RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
+    libressl \
+    libressl-dev
+
+#rabbitmq-c is only in testing.
+RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
+    rabbitmq-c \
+    rabbitmq-c-dev \
+    && pecl install amqp \
+    && docker-php-ext-enable amqp
+
 # Download & Install New Relic
 RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-$NEWRELIC_VERSION-linux-musl.tar.gz | tar xzf -
 RUN mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/agent/x64/newrelic-$PHP_API_VERSION.so /usr/local/lib/php/extensions/no-debug-non-zts-$PHP_API_VERSION/newrelic.so
@@ -45,10 +56,6 @@ RUN docker-php-ext-configure intl
 RUN docker-php-ext-configure gd \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/
-
-RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add rabbitmq-c rabbitmq-c-dev libressl libressl-dev \
-    && pecl install amqp \
-    && docker-php-ext-enable amqp
 
 RUN pecl install imagick \
     && docker-php-ext-install \
@@ -69,7 +76,8 @@ RUN apk --no-cache del \
     tar \
     autoconf \
     build-base \
-    openssl \
+    libressl-dev \
+    rabbitmq-c-dev \
     libtool
 
 RUN rm -rf /var/cache/apk/* /tmp/* ./newrelic-php5-$NEWRELIC_VERSION-linux-musl*
