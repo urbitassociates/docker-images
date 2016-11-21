@@ -1,0 +1,12 @@
+FROM golang:1.7-alpine
+
+ENV PATH /go/bin:$PATH
+
+# Install dependencies
+RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
+    curl \
+    glide \
+&& apk --no-cache del \
+    wget
+
+WORKDIR /go
