@@ -6,10 +6,12 @@ MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 ADD ./lumen.ini /usr/local/etc/php/conf.d
 ADD ./lumen.pool.conf /usr/local/etc/php-fpm.d/
 ADD ./newrelic.ini /usr/local/etc/php/conf.d
+ADD ./mongodb.ini /usr/local/etc/php/conf.d
 
 # Environment variables
 ENV PHP_API_VERSION 20151012
 ENV NEWRELIC_VERSION 6.6.1.172
+ENV PHP_MONGO_VERSION 1.1.8
 
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
@@ -30,7 +32,8 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     libtool \
     curl \
     icu \
-    icu-dev
+    icu-dev \
+    git
 
 RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
     libressl \
@@ -66,6 +69,15 @@ RUN pecl install imagick \
         opcache \
     && docker-php-ext-enable imagick
 
+RUN git clone --branch ${PHP_MONGO_VERSION} https://github.com/mongodb/mongo-php-driver /tmp/php-mongo \
+    && cd /tmp/php-mongo \
+    && git submodule sync && git submodule update --init \
+    && phpize  \
+    && ./configure  \
+    && make  \
+    && make install \
+    && make test
+
 # Remove unneeded dependencies & clean up
 RUN apk --no-cache del \
     wget \
@@ -78,7 +90,8 @@ RUN apk --no-cache del \
     build-base \
     libressl-dev \
     rabbitmq-c-dev \
-    libtool
+    libtool \
+    git
 
 RUN rm -rf /var/cache/apk/* /tmp/* ./newrelic-php5-$NEWRELIC_VERSION-linux-musl*
 
