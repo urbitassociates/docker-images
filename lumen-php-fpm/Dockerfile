@@ -11,7 +11,6 @@ ADD ./mongodb.ini /usr/local/etc/php/conf.d
 # Environment variables
 ENV PHP_API_VERSION 20151012
 ENV NEWRELIC_VERSION 6.6.1.172
-ENV PHP_MONGO_VERSION 1.1.8
 
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
