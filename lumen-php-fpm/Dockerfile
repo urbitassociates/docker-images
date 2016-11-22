@@ -32,8 +32,7 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     libtool \
     curl \
     icu \
-    icu-dev \
-    git
+    icu-dev
 
 RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
     libressl \
@@ -47,36 +46,28 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/ed
     && docker-php-ext-enable amqp
 
 # Download & Install New Relic
-RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-$NEWRELIC_VERSION-linux-musl.tar.gz | tar xzf -
-RUN mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/agent/x64/newrelic-$PHP_API_VERSION.so /usr/local/lib/php/extensions/no-debug-non-zts-$PHP_API_VERSION/newrelic.so
-RUN mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/daemon/newrelic-daemon.x64 /usr/bin/newrelic-daemon
+RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-$NEWRELIC_VERSION-linux-musl.tar.gz | tar xzf - \
+&& mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/agent/x64/newrelic-$PHP_API_VERSION.so /usr/local/lib/php/extensions/no-debug-non-zts-$PHP_API_VERSION/newrelic.so \
+&& mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/daemon/newrelic-daemon.x64 /usr/bin/newrelic-daemon \
+&& chmod 775 /usr/bin/newrelic-daemon \
+&& mkdir /var/log/newrelic
 
-RUN chmod 775 /usr/bin/newrelic-daemon
-RUN mkdir /var/log/newrelic
-
-RUN docker-php-ext-configure intl
-
-RUN docker-php-ext-configure gd \
+RUN docker-php-ext-configure intl \
+&& docker-php-ext-configure gd \
     --with-png-dir=/usr/include/ \
-    --with-jpeg-dir=/usr/include/
-
-RUN pecl install imagick \
-    && docker-php-ext-install \
-        pdo_mysql \
-        sockets \
-        gd \
-        intl \
-        opcache \
-    && docker-php-ext-enable imagick
-
-RUN git clone --branch ${PHP_MONGO_VERSION} https://github.com/mongodb/mongo-php-driver /tmp/php-mongo \
-    && cd /tmp/php-mongo \
-    && git submodule sync && git submodule update --init \
-    && phpize  \
-    && ./configure  \
-    && make  \
-    && make install \
-    && make test
+    --with-jpeg-dir=/usr/include/ \
+&& pecl install \
+    imagick \
+    mongodb \
+&& docker-php-ext-install \
+    pdo_mysql \
+    sockets \
+    gd \
+    intl \
+    opcache \
+&& docker-php-ext-enable \
+    imagick \
+    mongodb
 
 # Remove unneeded dependencies & clean up
 RUN apk --no-cache del \
@@ -90,8 +81,7 @@ RUN apk --no-cache del \
     build-base \
     libressl-dev \
     rabbitmq-c-dev \
-    libtool \
-    git
+    libtool
 
 RUN rm -rf /var/cache/apk/* /tmp/* ./newrelic-php5-$NEWRELIC_VERSION-linux-musl*
 
