@@ -25,13 +25,11 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     icu \
     icu-dev
 
-# Install Composer
+# Install Composer & dependencies
 RUN curl -sSL http://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
-    && chmod +x /usr/local/bin/composer
-
-# Install composer dependencies
-RUN composer global require "hirak/prestissimo:^0.3"
+&& mv composer.phar /usr/local/bin/composer \
+&& chmod +x /usr/local/bin/composer \
+&& composer global require "hirak/prestissimo:^0.3"
 
 # Configure & install extensions using the helper script provided by the base image
 RUN docker-php-ext-configure gd \
