@@ -1,0 +1,11 @@
+FROM php:7.0-alpine
+
+MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
+
+ADD ./lumen.ini /usr/local/etc/php/conf.d
+ADD lumen-scheduler.crontab /lumen-scheduler.crontab
+RUN /usr/bin/crontab /lumen-scheduler.crontab
+
+WORKDIR /var/www/application
+
+CMD crond -l 2 -f
