@@ -3,16 +3,23 @@ FROM php:7.0-fpm-alpine
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
 # Add configs
+ADD ./logging.ini /usr/local/etc/php/conf.d
 ADD ./lumen.ini /usr/local/etc/php/conf.d
-ADD ./lumen.pool.conf /usr/local/etc/php-fpm.d/
+ADD ./lumen.pool.conf /usr/local/etc/php-fpm.d
 ADD ./newrelic.ini /usr/local/etc/php/conf.d
-ADD ./mongodb.ini /usr/local/etc/php/conf.d
 
 # Environment variables
 ENV PHP_API_VERSION 20151012
 ENV NEWRELIC_VERSION 6.6.1.172
 
-# Install dependencies
+# Download & Install New Relic
+RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-$NEWRELIC_VERSION-linux-musl.tar.gz | tar xzf - \
+&& mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/agent/x64/newrelic-$PHP_API_VERSION.so /usr/local/lib/php/extensions/no-debug-non-zts-$PHP_API_VERSION/newrelic.so \
+&& mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/daemon/newrelic-daemon.x64 /usr/bin/newrelic-daemon \
+&& chmod 775 /usr/bin/newrelic-daemon \
+&& mkdir /var/log/newrelic
+
+# Install & clean up dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-gd \
     php7-sockets \
@@ -31,27 +38,16 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     libtool \
     curl \
     icu \
-    icu-dev
-
-RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
+    icu-dev \
+&& apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
     libressl \
-    libressl-dev
-
-#rabbitmq-c is only in testing.
-RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
+    libressl-dev \
+&& apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
     rabbitmq-c \
     rabbitmq-c-dev \
     && pecl install amqp \
-    && docker-php-ext-enable amqp
-
-# Download & Install New Relic
-RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-$NEWRELIC_VERSION-linux-musl.tar.gz | tar xzf - \
-&& mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/agent/x64/newrelic-$PHP_API_VERSION.so /usr/local/lib/php/extensions/no-debug-non-zts-$PHP_API_VERSION/newrelic.so \
-&& mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/daemon/newrelic-daemon.x64 /usr/bin/newrelic-daemon \
-&& chmod 775 /usr/bin/newrelic-daemon \
-&& mkdir /var/log/newrelic
-
-RUN docker-php-ext-configure intl \
+    && docker-php-ext-enable amqp \
+&& docker-php-ext-configure intl \
 && docker-php-ext-configure gd \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/ \
@@ -66,10 +62,8 @@ RUN docker-php-ext-configure intl \
     opcache \
 && docker-php-ext-enable \
     imagick \
-    mongodb
-
-# Remove unneeded dependencies & clean up
-RUN apk --no-cache del \
+    mongodb \
+&& apk --no-cache del \
     wget \
     icu-dev \
     libpng-dev \
@@ -80,9 +74,12 @@ RUN apk --no-cache del \
     build-base \
     libressl-dev \
     rabbitmq-c-dev \
-    libtool
+    libtool \
+&& rm -rf /var/cache/apk/* /tmp/* ./newrelic-php5-$NEWRELIC_VERSION-linux-musl*
 
-RUN rm -rf /var/cache/apk/* /tmp/* ./newrelic-php5-$NEWRELIC_VERSION-linux-musl*
+# Workaround for piping PHP-FPM worker logs to the container log output
+# https://bugs.php.net/bug.php?id=71880
+RUN mkfifo /tmp/stdout && chmod 777 /tmp/stdout
 
 CMD sh -c "newrelic-daemon && php-fpm"
 
