@@ -2,34 +2,34 @@ FROM nginx:1.10.0-alpine
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
-ADD nginx.conf /etc/nginx/
-ADD lumen.conf /etc/nginx/sites-available/
-
 ARG PHP_UPSTREAM=php-fpm
 
-RUN rm /etc/nginx/conf.d/default.conf \
-&& echo "upstream php-upstream { server ${PHP_UPSTREAM}:9000; }" > /etc/nginx/conf.d/upstream.conf
+COPY auto-reload-nginx.sh /home/auto-reload-nginx.sh
+COPY nginx.conf /etc/nginx/
+COPY lumen.conf /etc/nginx/conf.d/default.conf
 
-# Install dependencies
+RUN echo "upstream php-upstream { server ${PHP_UPSTREAM}:9000; }" > /etc/nginx/conf.d/upstream.conf \
+&& chmod +x /home/auto-reload-nginx.sh
+
+# Install & clean up dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     curl \
-    shadow
+    shadow \
+    inotify-tools \
+&& apk --no-cache del \
+    wget \
+&& rm -rf /var/cache/apk/* /tmp/*
 
-# Remove dependencies
-RUN apk --no-cache del \
-    wget
+# Set up user
+RUN addgroup -S www-data \
+&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx www-data \
+&& usermod -u 1000 www-data
 
-# Clean up
-RUN rm -rf /var/cache/apk/* /tmp/*
-
-RUN addgroup -S www-data
-RUN adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx www-data
-RUN usermod -u 1000 www-data
-
+# Set up logging
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log
 
-CMD ["nginx"]
+CMD ["/home/auto-reload-nginx.sh"]
 
 WORKDIR /var/www/application
 
