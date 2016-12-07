@@ -9,8 +9,12 @@ ADD ./lumen.pool.conf /usr/local/etc/php-fpm.d
 ADD ./newrelic.ini /usr/local/etc/php/conf.d
 
 # Environment variables
+ENV ALPINE_VERSION 3.4
 ENV PHP_API_VERSION 20151012
 ENV NEWRELIC_VERSION 6.6.1.172
+ENV IMAGICK_VERSION=3.4.1
+ENV AMQP_VERSION=1.7.1
+ENV MONGODB_VERSION=1.1.8
 
 # Download & Install New Relic
 RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-$NEWRELIC_VERSION-linux-musl.tar.gz | tar xzf - \
@@ -20,48 +24,51 @@ RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/
 && mkdir /var/log/newrelic
 
 # Install & clean up dependencies
-RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
-    php7-gd \
-    php7-sockets \
-    php7-zlib \
-    php7-intl \
-    php7-opcache \
-    ca-certificates \
+RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main/ add \
+    autoconf \
+    curl \
+    build-base \
+    libtool \
+    icu \
+    icu-dev \
     libpng \
     libpng-dev \
     libjpeg-turbo \
     libjpeg-turbo-dev \
     imagemagick-dev \
     imagemagick \
-    autoconf \
-    build-base \
-    libtool \
-    curl \
-    icu \
-    icu-dev \
+    ca-certificates \
 && apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
     libressl \
     libressl-dev \
-&& apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
+&& apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
+    php7-gd \
+    php7-sockets \
+    php7-zlib \
+    php7-intl \
+    php7-opcache \
+    php7-bcmath \
+&& apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --repository http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main/ add \
     rabbitmq-c \
     rabbitmq-c-dev \
-    && pecl install amqp \
-    && docker-php-ext-enable amqp \
 && docker-php-ext-configure intl \
 && docker-php-ext-configure gd \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/ \
 && pecl install \
-    imagick \
-    mongodb \
+    imagick-$IMAGICK_VERSION \
+    amqp-$AMQP_VERSION \
+    mongodb-$MONGODB_VERSION \
 && docker-php-ext-install \
     pdo_mysql \
     sockets \
     gd \
     intl \
     opcache \
+    bcmath \
 && docker-php-ext-enable \
     imagick \
+    amqp \
     mongodb \
 && apk --no-cache del \
     wget \

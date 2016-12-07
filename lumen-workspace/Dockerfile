@@ -2,70 +2,90 @@ FROM php:7.0-alpine
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
-# Install dependencies
-RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
-    php7-sockets \
-    php7-gd \
+# Environment variables
+ENV ALPINE_VERSION 3.4
+ENV PHP_API_VERSION 20151012
+ENV NEWRELIC_VERSION 6.6.1.172
+ENV IMAGICK_VERSION=3.4.1
+ENV AMQP_VERSION=1.7.1
+ENV MONGODB_VERSION=1.1.8
+
+# Download & Install New Relic
+RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-$NEWRELIC_VERSION-linux-musl.tar.gz | tar xzf - \
+&& mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/agent/x64/newrelic-$PHP_API_VERSION.so /usr/local/lib/php/extensions/no-debug-non-zts-$PHP_API_VERSION/newrelic.so \
+&& mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/daemon/newrelic-daemon.x64 /usr/bin/newrelic-daemon \
+&& chmod 775 /usr/bin/newrelic-daemon \
+&& mkdir /var/log/newrelic
+
+# Install & clean up dependencies
+RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main/ add \
+    autoconf \
     curl \
-    nodejs \
-    git \
-    php7-zlib \
-    php7-intl \
-    php7-opcache \
+    build-base \
+    libtool \
+    icu \
+    icu-dev \
     libpng \
     libpng-dev \
     libjpeg-turbo \
     libjpeg-turbo-dev \
     imagemagick-dev \
     imagemagick \
+    ca-certificates \
+&& apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
+    libressl \
+    libressl-dev \
+&& apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
+    php7-gd \
+    php7-sockets \
+    php7-zlib \
+    php7-intl \
+    php7-opcache \
+    php7-bcmath \
+    curl \
+    nodejs \
+    git \
+&& apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --repository http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main/ add \
+    rabbitmq-c \
+    rabbitmq-c-dev \
+&& docker-php-ext-configure intl \
+&& docker-php-ext-configure gd \
+    --with-png-dir=/usr/include/ \
+    --with-jpeg-dir=/usr/include/ \
+&& pecl install \
+    imagick-$IMAGICK_VERSION \
+    amqp-$AMQP_VERSION \
+    mongodb-$MONGODB_VERSION \
+&& docker-php-ext-install \
+    pdo_mysql \
+    sockets \
+    gd \
+    intl \
+    opcache \
+    bcmath \
+&& docker-php-ext-enable \
+    imagick \
+    amqp \
+    mongodb \
+&& apk --no-cache del \
+    wget \
+    icu-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    imagemagick-dev \
+    tar \
     autoconf \
     build-base \
+    libressl-dev \
+    rabbitmq-c-dev \
     libtool \
-    openssl \
-    icu \
-    icu-dev
+&& rm -rf /var/cache/apk/* /tmp/* ./newrelic-php5-$NEWRELIC_VERSION-linux-musl*
 
 # Install Composer & dependencies
 RUN curl -sSL http://getcomposer.org/installer | php \
 && mv composer.phar /usr/local/bin/composer \
 && chmod +x /usr/local/bin/composer \
 && composer global require "hirak/prestissimo:^0.3"
-
-# Configure & install extensions using the helper script provided by the base image
-RUN docker-php-ext-configure gd \
-    --with-png-dir=/usr/include/ \
-    --with-jpeg-dir=/usr/include/
-RUN docker-php-ext-configure intl
-
-# Install extensions using the helper script provided by the base image
-
-RUN pecl install imagick \
-    && docker-php-ext-install \
-        pdo_mysql \
-        sockets \
-        gd \
-        intl \
-        opcache \
-    && docker-php-ext-enable imagick
-
-# Run Lumen Scheduler crontab
-ADD lumen-scheduler.crontab /lumen-scheduler.crontab
-RUN /usr/bin/crontab /lumen-scheduler.crontab
-
-# Remove dependencies
-RUN apk --no-cache del \
-    wget \
-    icu-dev \
-    imagemagick-dev \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    autoconf \
-    build-base \
-    libtool \
-    openssl
-
-# Clean up
-RUN rm -rf /var/cache/apk/* /tmp/*
 
 WORKDIR /var/www/application
 
