@@ -2,8 +2,8 @@ FROM alpine:3.4
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
-ARG K8S_VERSION=v1.4.3
-ARG HELM_VERSION=v2.0.0
+ARG K8S_VERSION=v1.4.6
+ARG HELM_VERSION=v2.0.2
 
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
