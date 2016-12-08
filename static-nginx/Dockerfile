@@ -30,4 +30,4 @@ CMD ["/home/auto-reload-nginx.sh"]
 
 WORKDIR /var/www/application
 
-EXPOSE 80 443
+EXPOSE 80
