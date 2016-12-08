@@ -2,8 +2,8 @@ FROM alpine:3.4
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
-ARG K8S_VERSION=v1.4.3
-ARG HELM_VERSION=v2.0.0
+ARG K8S_VERSION=v1.4.6
+ARG HELM_VERSION=v2.0.2
 
 # Install dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
@@ -18,6 +18,7 @@ RUN curl -#SL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernete
 && chmod +x /usr/local/bin/kubectl \
 && curl -#SL http://storage.googleapis.com/kubernetes-helm/helm-$HELM_VERSION-linux-amd64.tar.gz | tar -xzf - \
 && mv linux-amd64/helm /usr/local/bin/helm \
-&& chmod +x /usr/local/bin/helm
+&& chmod +x /usr/local/bin/helm \
+&& mkdir ~/.kube && mkdir ~/.helm
 
 CMD kubectl
