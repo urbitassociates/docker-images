@@ -3,6 +3,7 @@ FROM node:6.8
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
 # Environment variables
+ENV YARN_VERSION 0.18.0
 ENV PHANTOMJS_VERSION 2.1.13
 
 # Install dependencies
@@ -11,7 +12,7 @@ RUN apt-get -y update \
 	ocaml \
 	libelf-dev \
  && npm i -g \
-	yarn \
+	yarn@YARN_VERSION \
 	phantomjs-prebuilt@PHANTOMJS_VERSION
 
 # Clean up
