@@ -7,6 +7,7 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     curl \
     glide \
     git \
+    make \
 && apk --no-cache del \
     wget
 
