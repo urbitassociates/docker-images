@@ -12,8 +12,8 @@ RUN apt-get -y update \
 	ocaml \
 	libelf-dev \
  && npm i -g \
-	yarn@YARN_VERSION \
-	phantomjs-prebuilt@PHANTOMJS_VERSION
+	yarn@$YARN_VERSION \
+	phantomjs-prebuilt@$PHANTOMJS_VERSION
 
 # Clean up
 RUN rm -rf /var/cache/apt/archives
