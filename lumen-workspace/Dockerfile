@@ -87,6 +87,10 @@ RUN curl -sSL http://getcomposer.org/installer | php \
 && chmod +x /usr/local/bin/composer \
 && composer global require "hirak/prestissimo:^0.3"
 
+# Run Lumen Scheduler crontab
+ADD lumen-scheduler.crontab /lumen-scheduler.crontab
+RUN /usr/bin/crontab /lumen-scheduler.crontab
+
 WORKDIR /var/www/application
 
 CMD crond -l 2 -f
