@@ -2,11 +2,14 @@ FROM php:7.0-fpm-alpine
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
-# Add configs
+# PHP
 ADD ./logging.ini /usr/local/etc/php/conf.d
 ADD ./lumen.ini /usr/local/etc/php/conf.d
-ADD ./lumen.pool.conf /usr/local/etc/php-fpm.d
 ADD ./newrelic.ini /usr/local/etc/php/conf.d
+
+# PHP-FPM
+ADD ./lumen.pool.conf /usr/local/etc/php-fpm.d
+RUN rm /usr/local/etc/php-fpm.d/www.conf*
 
 # Environment variables
 ENV ALPINE_VERSION 3.4
@@ -88,7 +91,7 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$
 # https://bugs.php.net/bug.php?id=71880
 RUN mkfifo /tmp/stdout && chmod 777 /tmp/stdout
 
-CMD sh -c "newrelic-daemon && php-fpm"
+CMD sh -c "newrelic-daemon && php-fpm | tail -f /tmp/stdout"
 
 WORKDIR /var/www/application
 
