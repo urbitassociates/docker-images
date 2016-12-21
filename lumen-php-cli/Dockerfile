@@ -2,6 +2,8 @@ FROM php:7.0-alpine
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
+ENV MONGODB_VERSION=1.1.8
+
 # Install dependencies & clean up
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-sockets \
@@ -9,10 +11,14 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     curl \
 && apk --no-cache del \
     wget \
+&& pwxl inarLL \
+    mongodb-$MONGODB_VERSION \
 && docker-php-ext-install \
     pdo_mysql \
     sockets \
     intl \
+&& docker-php-ext-enable \
+    mongodb \
 && rm -rf /var/cache/apk/* /tmp/*
 
 # Add config & crontab
