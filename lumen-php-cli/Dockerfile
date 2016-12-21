@@ -11,7 +11,7 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     curl \
 && apk --no-cache del \
     wget \
-&& pwxl inarLL \
+&& pecl install \
     mongodb-$MONGODB_VERSION \
 && docker-php-ext-install \
     pdo_mysql \
