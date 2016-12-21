@@ -9,17 +9,26 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     php7-sockets \
     php7-intl \
     curl \
+    openssl-dev \
+    openssl \
+    autoconf \
+    build-base \
 && apk --no-cache del \
-    wget \
-&& pecl install \
+    wget 
+RUN pecl install \
     mongodb-$MONGODB_VERSION \
 && docker-php-ext-install \
     pdo_mysql \
     sockets \
     intl \
 && docker-php-ext-enable \
-    mongodb \
-&& rm -rf /var/cache/apk/* /tmp/*
+    mongodb
+
+RUN rm -rf /var/cache/apk/* /tmp/* \
+&& apk --no-cache del \
+    build-base \
+    autoconf \
+    openssl-dev
 
 # Add config & crontab
 ADD ./lumen.ini /usr/local/etc/php/conf.d
