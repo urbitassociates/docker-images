@@ -13,6 +13,8 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
     openssl \
     autoconf \
     build-base \
+    icu \
+    icu-dev \
 && apk --no-cache del \
     wget 
 RUN pecl install \
@@ -28,7 +30,8 @@ RUN rm -rf /var/cache/apk/* /tmp/* \
 && apk --no-cache del \
     build-base \
     autoconf \
-    openssl-dev
+    openssl-dev \
+    icu-dev
 
 # Add config & crontab
 ADD ./lumen.ini /usr/local/etc/php/conf.d
