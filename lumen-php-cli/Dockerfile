@@ -7,7 +7,7 @@ ENV MONGODB_VERSION=1.1.8
 # Install dependencies & clean up
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-sockets \
-    php7-intl \
+    php7-bcmath \
     curl \
     openssl-dev \
     openssl \
@@ -23,6 +23,7 @@ RUN pecl install \
     pdo_mysql \
     sockets \
     intl \
+    bcmath \
 && docker-php-ext-enable \
     mongodb
 
