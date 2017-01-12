@@ -48,7 +48,6 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$
     php7-gd \
     php7-sockets \
     php7-zlib \
-    php7-intl \
     php7-opcache \
     php7-bcmath \
 && apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --repository http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main/ add \
