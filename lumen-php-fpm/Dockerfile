@@ -17,7 +17,7 @@ ENV PHP_API_VERSION 20151012
 ENV NEWRELIC_VERSION 6.6.1.172
 ENV IMAGICK_VERSION=3.4.1
 ENV AMQP_VERSION=1.7.1
-ENV MONGODB_VERSION=1.1.8
+ENV MONGODB_VERSION=1.2.3
 
 # Download & Install New Relic
 RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-$NEWRELIC_VERSION-linux-musl.tar.gz | tar xzf - \
@@ -33,6 +33,7 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$
     build-base \
     libtool \
     icu \
+    icu-libs \
     icu-dev \
     libpng \
     libpng-dev \
@@ -41,25 +42,21 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$
     imagemagick-dev \
     imagemagick \
     ca-certificates \
-&& apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
-    libressl \
-    libressl-dev \
-&& apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
+    openssl \
+    openssl-dev \
+&& apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/v3.5/community/ add \
     php7-gd \
     php7-sockets \
     php7-zlib \
+    php7-intl \
     php7-opcache \
     php7-bcmath \
-&& apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --repository http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main/ add \
-    rabbitmq-c \
-    rabbitmq-c-dev \
 && docker-php-ext-configure intl \
 && docker-php-ext-configure gd \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/ \
 && pecl install \
     imagick-$IMAGICK_VERSION \
-    amqp-$AMQP_VERSION \
     mongodb-$MONGODB_VERSION \
 && docker-php-ext-install \
     pdo_mysql \
@@ -70,7 +67,6 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$
     bcmath \
 && docker-php-ext-enable \
     imagick \
-    amqp \
     mongodb \
 && apk --no-cache del \
     wget \
@@ -81,14 +77,8 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$
     tar \
     autoconf \
     build-base \
-    libressl-dev \
-    rabbitmq-c-dev \
     libtool \
 && rm -rf /var/cache/apk/* /tmp/* ./newrelic-php5-$NEWRELIC_VERSION-linux-musl*
-
-# Workaround for piping PHP-FPM worker logs to the container log output
-# https://bugs.php.net/bug.php?id=71880
-RUN mkfifo /tmp/stdout && chmod 777 /tmp/stdout
 
 CMD sh -c "newrelic-daemon && php-fpm | tail -f /tmp/stdout"
 
