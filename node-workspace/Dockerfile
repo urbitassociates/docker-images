@@ -1,9 +1,9 @@
-FROM node:6.8
+FROM node:6.9
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
 # Environment variables
-ENV YARN_VERSION 0.18.1
+ENV YARN_VERSION 0.19.1
 ENV PHANTOMJS_VERSION 2.1.14
 
 # Install dependencies
