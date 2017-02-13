@@ -1,4 +1,4 @@
-FROM php:7.0-alpine
+FROM php:7.1-alpine
 
 MAINTAINER Simon Forsman <simon@urb-it.com>
 
@@ -8,14 +8,14 @@ ADD ./worker.conf /etc/supervisor/worker.conf
 
 # Environment variables
 ENV ALPINE_VERSION 3.4
-ENV PHP_API_VERSION 20151012
-ENV NEWRELIC_VERSION 6.6.1.172
+ENV PHP_API_VERSION 20160303
+ENV NEWRELIC_VERSION 6.9.0.182
 ENV PYTHON_VERSION=2.7.12-r0
 ENV PY_PIP_VERSION=8.1.2-r0
-ENV SUPERVISOR_VERSION=3.3.0
-ENV IMAGICK_VERSION=3.4.1
+ENV SUPERVISOR_VERSION=3.3.1
+ENV IMAGICK_VERSION=3.4.3
 ENV AMQP_VERSION=1.7.1
-ENV MONGODB_VERSION=1.1.8
+ENV MONGODB_VERSION=1.2.5
 
 # Download & Install New Relic
 RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-$NEWRELIC_VERSION-linux-musl.tar.gz | tar xzf - \
