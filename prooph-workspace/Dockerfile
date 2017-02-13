@@ -1,4 +1,4 @@
-FROM prooph/php:7.0-cli-opcache
+FROM prooph/php:7.1-cli-opcache
 
 MAINTAINER Simon Forsman <simon@urb-it.com>
 

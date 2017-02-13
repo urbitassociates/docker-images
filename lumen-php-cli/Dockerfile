@@ -1,8 +1,8 @@
-FROM php:7.0-alpine
+FROM php:7.1-alpine
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
-ENV MONGODB_VERSION=1.1.8
+ENV MONGODB_VERSION=1.2.5
 
 # Install dependencies & clean up
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \

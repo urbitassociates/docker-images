@@ -1,4 +1,4 @@
-FROM php:7.0-fpm-alpine
+FROM php:7.1-fpm-alpine
 
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
@@ -13,11 +13,11 @@ RUN rm /usr/local/etc/php-fpm.d/www.conf*
 
 # Environment variables
 ENV ALPINE_VERSION 3.4
-ENV PHP_API_VERSION 20151012
-ENV NEWRELIC_VERSION 6.6.1.172
-ENV IMAGICK_VERSION=3.4.1
+ENV PHP_API_VERSION 20160303
+ENV NEWRELIC_VERSION 6.9.0.182
+ENV IMAGICK_VERSION=3.4.3
 ENV AMQP_VERSION=1.7.1
-ENV MONGODB_VERSION=1.2.3
+ENV MONGODB_VERSION=1.2.5
 
 # Download & Install New Relic
 RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-$NEWRELIC_VERSION-linux-musl.tar.gz | tar xzf - \
