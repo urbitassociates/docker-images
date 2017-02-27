@@ -5,9 +5,9 @@ MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 # Environment variables
 ENV ALPINE_VERSION 3.4
 ENV PHP_API_VERSION 20160303
-ENV NEWRELIC_VERSION 6.9.0.182
+ENV NEWRELIC_VERSION 7.0.0.186
 ENV IMAGICK_VERSION=3.4.3
-ENV AMQP_VERSION=1.7.1
+# ENV AMQP_VERSION=1.8.0
 ENV MONGODB_VERSION=1.2.5
 
 # Download & Install New Relic
@@ -20,21 +20,23 @@ RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/
 # Install & clean up dependencies
 RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main/ add \
     autoconf \
-    curl \
     build-base \
+    ca-certificates \
+&& apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/main/ add \
+    curl \
+    openssl \
+    openssl-dev \
     libtool \
     icu \
+    icu-libs \
     icu-dev \
+    libwebp \
     libpng \
     libpng-dev \
     libjpeg-turbo \
     libjpeg-turbo-dev \
     imagemagick-dev \
     imagemagick \
-    ca-certificates \
-&& apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ add \
-    libressl \
-    libressl-dev \
 && apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     php7-gd \
     php7-sockets \
@@ -42,19 +44,15 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$
     php7-intl \
     php7-opcache \
     php7-bcmath \
-    curl \
     nodejs \
     git \
-&& apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --repository http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main/ add \
-    rabbitmq-c \
-    rabbitmq-c-dev \
 && docker-php-ext-configure intl \
 && docker-php-ext-configure gd \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/ \
 && pecl install \
     imagick-$IMAGICK_VERSION \
-    amqp-$AMQP_VERSION \
+    # amqp-$AMQP_VERSION \
     mongodb-$MONGODB_VERSION \
 && docker-php-ext-install \
     pdo_mysql \
@@ -65,7 +63,7 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$
     bcmath \
 && docker-php-ext-enable \
     imagick \
-    amqp \
+    # amqp \
     mongodb \
 && apk --no-cache del \
     wget \
@@ -76,8 +74,6 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$
     tar \
     autoconf \
     build-base \
-    libressl-dev \
-    rabbitmq-c-dev \
     libtool \
 && rm -rf /var/cache/apk/* /tmp/* ./newrelic-php5-$NEWRELIC_VERSION-linux-musl*
 
