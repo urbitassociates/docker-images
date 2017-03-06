@@ -3,19 +3,14 @@ FROM node:6.10
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
 # Environment variables
-ENV YARN_VERSION 0.21.3
 ENV PHANTOMJS_VERSION 2.1.14
 
 # Install dependencies
-RUN apt-get -y update \
- && apt-get -y install \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	ocaml \
 	libelf-dev \
  && npm i -g \
-	yarn@$YARN_VERSION \
-	phantomjs-prebuilt@$PHANTOMJS_VERSION
-
-# Clean up
-RUN rm -rf /var/cache/apt/archives
+	phantomjs-prebuilt@$PHANTOMJS_VERSION \
+&& rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 WORKDIR /home
