@@ -6,12 +6,11 @@ MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 ENV PHANTOMJS_VERSION 2.1.14
 
 # Install dependencies
-RUN apt-get -y update \
- && apt-get -y install \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	ocaml \
 	libelf-dev \
  && npm i -g \
 	phantomjs-prebuilt@$PHANTOMJS_VERSION \
- && rm -rf /var/cache/apt/archives
+&& rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 WORKDIR /home
