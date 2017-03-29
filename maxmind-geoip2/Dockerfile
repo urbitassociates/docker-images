@@ -60,7 +60,7 @@ RUN apk del autoconf && \
     apk del libtool && \
     apk del make && \
     apk del zlib-dev && \
-    apk del curl-dev
+    apk del git
 
 ## Start services
 ENTRYPOINT ["/usr/local/bin/start-geoip-service.sh"]
