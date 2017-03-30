@@ -6,6 +6,7 @@ MAINTAINER Simon Forsman <simon@urb-it.com>
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     git \
     curl \
+    nodejs \
 && apk --no-cache del \
     wget
 
