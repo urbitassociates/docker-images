@@ -19,6 +19,7 @@ RUN mkdir /go \
 RUN apk --no-cache --update add \
     go \
     curl \
+    perl \
 && apk --no-cache del \
     wget \
 && apk --no-cache --update add --virtual build-dependencies \
@@ -31,6 +32,7 @@ RUN apk --no-cache --update add \
     zlib-dev \
     curl-dev
 
+RUN opm install chunpu/shim
 # Install and Configure GeoIP service
 RUN go get github.com/klauspost/geoip-service \
 && git clone https://github.com/maxmind/geoipupdate && \
