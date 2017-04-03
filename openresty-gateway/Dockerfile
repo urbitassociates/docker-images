@@ -23,16 +23,12 @@ RUN opm install chunpu/shim
 
 # Remove dependencies & clean up
 RUN apk --no-cache del \
-    wget \
-    build-dependencies \
+    wget  \
 && rm -rf /var/cache/apk/* /tmp/*
 
 # Set up container logging
 RUN ln -sf /dev/stdout /usr/local/openresty/nginx/logs/access.log && \
     ln -sf /dev/stderr /usr/local/openresty/nginx/logs/error.log
-
-# Start services
-ENTRYPOINT ["/usr/local/bin/start-geoip-service.sh"]
 
 WORKDIR /usr/local/api-gateway
 
