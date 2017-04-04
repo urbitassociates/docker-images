@@ -20,15 +20,11 @@ RUN apk --no-cache --update add \
 
 # Install opm packages
 RUN opm install chunpu/shim
-
+RUN opm install pintsized/lua-resty-http
 # Remove dependencies & clean up
 RUN apk --no-cache del \
     wget  \
 && rm -rf /var/cache/apk/* /tmp/*
-
-# Set up container logging
-RUN ln -sf /dev/stdout /usr/local/openresty/nginx/logs/access.log && \
-    ln -sf /dev/stderr /usr/local/openresty/nginx/logs/error.log
 
 WORKDIR /usr/local/api-gateway
 
