@@ -21,7 +21,8 @@ RUN apk --no-cache --update add \
 # Install opm packages
 RUN opm install chunpu/shim
 RUN opm install pintsized/lua-resty-http
-
+RUN opm install sumory/lor 
 WORKDIR /usr/local/api-gateway
 
 EXPOSE 80 443
+
