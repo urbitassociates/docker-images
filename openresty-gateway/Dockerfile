@@ -11,17 +11,36 @@ RUN mkdir -p /usr/local/api-gateway/nginx/conf.d && \
     chmod +x /etc/init.d/nginx
 
 # Install dependencies
-RUN apk --no-cache --update add \
-    curl \
-    perl \
-&& apk --no-cache del \
-    wget  \
-&& rm -rf /var/cache/apk/* /tmp/*
+RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
+>> /etc/apk/repositories \
+&& echo http://dl-4.alpinelinux.org/alpine/edge/main \
+>> /etc/apk/repositories \
+&& apk --no-cache --update add \
+   nettle nettle-dev gcc lua5.1-dev curl perl luarocks5.1 openssl-dev tar g++ make openssl \
+&& ln -s /usr/bin/luarocks-5.1 /usr/bin/luarocks
 
+# mongo-c-driver libbson 1.5.2
+RUN cd /tmp \
+&& curl -L -O https://github.com/mongodb/mongo-c-driver/releases/download/1.6.0/mongo-c-driver-1.6.0.tar.gz \
+&& tar xzf mongo-c-driver-1.6.0.tar.gz \
+&& cd mongo-c-driver-1.6.0 \
+&& ./configure --disable-automatic-init-and-cleanup \
+&& make clean \
+&& make \
+&& make clean \
+&& make install .
+
+RUN /usr/bin/luarocks install mongorover
+
+# Cleanup
+RUN apk --no-cache del wget lua5.1-dev openssl-dev tar luarocks5.1 g++ make  \
+&& rm -rf /var/cache/apk/* /tmp/*
 # Install opm packages
 RUN opm install chunpu/shim
 RUN opm install pintsized/lua-resty-http
 RUN opm install sumory/lor 
+RUN opm install bungle/lua-resty-nettle
+
 WORKDIR /usr/local/api-gateway
 
 EXPOSE 80 443
