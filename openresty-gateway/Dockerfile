@@ -16,7 +16,7 @@ RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
 && echo http://dl-4.alpinelinux.org/alpine/edge/main \
 >> /etc/apk/repositories \
 && apk --no-cache --update add \
-   nettle nettle-dev gcc lua5.1-dev curl perl luarocks5.1 openssl-dev tar g++ make openssl \
+   nettle nettle-dev gcc lua5.1-dev curl perl luarocks5.1 openssl-dev tar g++ make openssl cmake \
 && ln -s /usr/bin/luarocks-5.1 /usr/bin/luarocks
 
 # mongo-c-driver libbson 1.5.2
@@ -30,10 +30,9 @@ RUN cd /tmp \
 && make clean \
 && make install .
 
-RUN /usr/bin/luarocks install mongorover
-
+RUN /usr/bin/luarocks install mongorover && /usr/bin/luarocks install rapidjson
 # Cleanup
-RUN apk --no-cache del wget lua5.1-dev openssl-dev tar luarocks5.1 g++ make  \
+RUN apk --no-cache del wget lua5.1-dev openssl-dev tar luarocks5.1 g++ make cmake  \
 && rm -rf /var/cache/apk/* /tmp/*
 # Install opm packages
 RUN opm install chunpu/shim pintsized/lua-resty-http sumory/lor bungle/lua-resty-nettle
