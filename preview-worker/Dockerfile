@@ -71,4 +71,4 @@ RUN apk --no-cache del \
 
 WORKDIR /var/application
 
-ENTRYPOINT ["/bin/sh", "-c", "supervisord", "--nodaemon" ,"--configuration /etc/supervisor/worker.conf"]
+ENTRYPOINT ["/bin/sh", "-c", "supervisord", "--nodaemon" ,"--configuration /etc/supervisord.conf"]
