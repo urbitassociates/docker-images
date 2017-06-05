@@ -42,7 +42,7 @@ RUN curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_VER
     && curl -L http://storage.googleapis.com/kubernetes-helm/${HELM_FILENAME} -o /tmp/${HELM_FILENAME} \
     && tar -zxvf /tmp/${HELM_FILENAME} -C /tmp \
     && mv /tmp/linux-amd64/helm /usr/local/bin/helm \
-    && chmod +x /usr/local/bin/helm
+    && chmod +x /usr/local/bin/helm && helm init -c && helm repo add urbit http://charts.urb-it.io
 
 # CLI53
 RUN go get github.com/barnybug/cli53 ;\
