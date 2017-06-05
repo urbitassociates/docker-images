@@ -4,7 +4,7 @@ MAINTAINER Jonas Odencrants <jonas.odencrants@urbit.com>
 # Environment variables
 ENV LUA_VERSION 5.1
 ENV ALPINE_VERSION 3.6
-ENV LUA_PACKKAGE lua${LUA_VERSION}
+ENV LUA_PACKAGE lua${LUA_VERSION}
 
 # LPUpdate apk index.
 
@@ -21,7 +21,6 @@ echo http://dl-4.alpinelinux.org/alpine/edge/testing \
     ca-certificates \
     ${LUA_PACKAGE} \
     ${LUA_PACKAGE}-dev \
-    lua-dev \
     luarocks${LUA_VERSION} \
     lua${LUA_VERSION}-filesystem \
     lua${LUA_VERSION}-busted \
@@ -40,7 +39,6 @@ echo http://dl-4.alpinelinux.org/alpine/edge/testing \
 && /usr/bin/luarocks install luacheck  \
 && apk --no-cache del \ 
     wget \
-    lua-dev \
     ${LUA_PACKAGE}-dev \
     luarocks5.1 \
     openssl-dev \ 
