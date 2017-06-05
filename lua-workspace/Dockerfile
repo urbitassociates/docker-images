@@ -5,6 +5,7 @@ MAINTAINER Jonas Odencrants <jonas.odencrants@urbit.com>
 ENV LUA_VERSION 5.1
 ENV ALPINE_VERSION 3.6
 ENV LUA_PACKAGE lua${LUA_VERSION}
+ENV APPLICATION_PATH  /usr/local/application
 
 # LPUpdate apk index.
 
@@ -49,3 +50,6 @@ echo http://dl-4.alpinelinux.org/alpine/edge/testing \
     cmake \
     build-base \
 && rm -rf /var/cache/apk/* /tmp/* \
+&& mkdir ${APPLICATION_PATH}
+
+WORKDIR ${APPLICATION_PATH}
