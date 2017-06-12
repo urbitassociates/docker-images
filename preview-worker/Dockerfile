@@ -41,8 +41,8 @@ RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
     && tar -zxvf /tmp/${HELM_FILENAME} -C /tmp \
     && mv /tmp/linux-amd64/helm /usr/local/bin/helm \
     && chmod +x /usr/local/bin/helm && helm init -c && helm repo add urbit http://charts.urb-it.io \
-&& go get github.com/barnybug/cli53 ;\
-    cd $GOPATH/src/github.com/barnybug/cli53 ;\
+&& go get github.com/urbitassociates/cli53 ;\
+    cd $GOPATH/src/github.com/urbitassociates/cli53 ;\
     make install \
 && pip install \
     supervisor==$SUPERVISOR_VERSION \
