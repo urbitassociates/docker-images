@@ -45,8 +45,8 @@ RUN curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_VER
     && chmod +x /usr/local/bin/helm && helm init -c && helm repo add urbit http://charts.urb-it.io
 
 # CLI53
-RUN go get github.com/barnybug/cli53 ;\
-    cd $GOPATH/src/github.com/barnybug/cli53 ;\
+RUN go get github.com/urbitassociates/cli53 ;\
+    cd $GOPATH/src/github.com/urbitassociates/cli53 ;\
     make install
 
 # Python packages
