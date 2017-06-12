@@ -34,30 +34,22 @@ RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
    ca-certificates \
    luajit \
    py-pip \
-&& update-ca-certificates
-
-# kubectl and helm
-RUN curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl \
+&& update-ca-certificates \
+&& curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl \
     && chmod +x /usr/local/bin/kubectl \
     && curl -L http://storage.googleapis.com/kubernetes-helm/${HELM_FILENAME} -o /tmp/${HELM_FILENAME} \
     && tar -zxvf /tmp/${HELM_FILENAME} -C /tmp \
     && mv /tmp/linux-amd64/helm /usr/local/bin/helm \
     && chmod +x /usr/local/bin/helm && helm init -c && helm repo add urbit http://charts.urb-it.io
-
-# CLI53
-RUN go get github.com/barnybug/cli53 ;\
+&& go get github.com/barnybug/cli53 ;\
     cd $GOPATH/src/github.com/barnybug/cli53 ;\
     make install
-
-# Python packages
-RUN pip install \
+&& pip install \
     supervisor==$SUPERVISOR_VERSION \
     supervisor-stdout \
     redis \
     enum34
-
-# Cleanup
-RUN apk --no-cache del \
+&& apk --no-cache del \
     wget \
     openssl-dev \
     tar \
