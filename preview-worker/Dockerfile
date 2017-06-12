@@ -52,6 +52,7 @@ RUN go get github.com/barnybug/cli53 ;\
 # Python packages
 RUN pip install \
     supervisor==$SUPERVISOR_VERSION \
+    supervisor-stdout \
     redis \
     enum34
 
