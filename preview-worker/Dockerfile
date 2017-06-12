@@ -43,7 +43,7 @@ RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
     && chmod +x /usr/local/bin/helm && helm init -c && helm repo add urbit http://charts.urb-it.io \
 && go get github.com/barnybug/cli53 ;\
     cd $GOPATH/src/github.com/barnybug/cli53 ;\
-    make install
+    make install \
 && pip install \
     supervisor==$SUPERVISOR_VERSION \
     supervisor-stdout \
