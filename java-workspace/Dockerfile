@@ -6,7 +6,7 @@ MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 ENV YARN_VERSION 0.24.6
 
 # Add nodejs repo
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
 
 # Install & clean up dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
