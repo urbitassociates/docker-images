@@ -29,7 +29,7 @@ RUN yum update -y \
     && td-agent-gem install --no-document \
         fluent-plugin-kubernetes_metadata_filter:0.26.2 \
         fluent-plugin-loggly:0.0.9 \
-        fluent-plugin-grok-parser:2.1.0 \
+        fluent-plugin-grok-parser:2.1.4 \
         fluent-plugin-record-modifier:0.5.0 \
         fluent-plugin-mutate_filter:0.2.0 \
 
