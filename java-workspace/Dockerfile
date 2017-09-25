@@ -3,7 +3,7 @@ FROM openjdk:8-jre
 MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
 
 # Environment variables
-ENV YARN_VERSION 0.27.5
+ENV YARN_VERSION 1.0.2
 
 # Add nodejs repo
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
