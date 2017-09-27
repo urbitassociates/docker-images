@@ -35,7 +35,7 @@ RUN /usr/bin/luarocks install mongorover && /usr/bin/luarocks install rapidjson
 RUN apk --no-cache del wget lua5.1-dev openssl-dev tar luarocks5.1 g++ make cmake  \
 && rm -rf /var/cache/apk/* /tmp/*
 # Install opm packages
-RUN opm install chunpu/shim pintsized/lua-resty-http sumory/lor bungle/lua-resty-nettle
+RUN opm install chunpu/shim pintsized/lua-resty-http sumory/lor bungle/lua-resty-nettle SkyLothar/lua-resty-jwt
 
 WORKDIR /usr/local/api-gateway
 
