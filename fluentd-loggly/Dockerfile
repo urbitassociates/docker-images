@@ -32,7 +32,7 @@ RUN yum update -y \
         fluent-plugin-grok-parser:2.1.4 \
         fluent-plugin-record-modifier:0.5.0 \
         fluent-plugin-mutate_filter:0.2.0 \
-        flient-plugin-ua-parser:1.2.0 \
+        fluent-plugin-ua-parser:1.2.0 \
 
     && yum remove -y sudo \
     && rm -rf /opt/td-agent/embedded/lib/ruby/gems/2.1.0/gems/json-1.8.1
