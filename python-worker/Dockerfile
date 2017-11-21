@@ -17,18 +17,20 @@ RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
    openssl-dev \
    openssl \
    ca-certificates \
+   python2 \
    python3 \
 && update-ca-certificates \
 && python3 -m ensurepip \
+&& python -m ensurepip \
 && rm -r /usr/lib/python*/ensurepip \
 && pip3 install --upgrade pip setuptools \
-&& if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi \
-&& if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi \
 && rm -r /root/.cache \
 && pip install \
     supervisor==$SUPERVISOR_VERSION \
     supervisor-stdout \
+&& pip3 install \
     redis \
+    pymongo[tls] \
 && apk --no-cache del \
     wget \
     openssl-dev \
