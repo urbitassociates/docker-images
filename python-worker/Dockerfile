@@ -2,12 +2,7 @@ FROM alpine:3.4
 
 MAINTAINER Urb-it AB <teknik@urb-it.com>
 
-ENV SUPERVISOR_VERSION=3.3.1
-ENV GOPATH /go
-ENV GO15VENDOREXPERIMENT 1
-ENV KUBE_VERSION="v1.4.6"
-ENV HELM_VERSION="v2.0.2"
-ENV HELM_FILENAME="helm-${HELM_VERSION}-linux-amd64.tar.gz"
+ENV SUPERVISOR_VERSION=3.3.3
 
 ADD ./worker.conf /etc/supervisord.conf
 
@@ -19,49 +14,28 @@ RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
 && echo http://dl-4.alpinelinux.org/alpine/edge/community \
 >> /etc/apk/repositories \
 && apk --no-cache --update add \
-   gcc \
-   curl \
-   perl \
    openssl-dev \
-   tar \
-   unzip \
-   g++ \
-   git \
-   make \
-   cmake \
    openssl \
-   go \
    ca-certificates \
-   luajit \
-   py-pip \
+   python2 \
+   python3 \
 && update-ca-certificates \
-&& curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl \
-    && chmod +x /usr/local/bin/kubectl \
-    && curl -L http://storage.googleapis.com/kubernetes-helm/${HELM_FILENAME} -o /tmp/${HELM_FILENAME} \
-    && tar -zxvf /tmp/${HELM_FILENAME} -C /tmp \
-    && mv /tmp/linux-amd64/helm /usr/local/bin/helm \
-    && chmod +x /usr/local/bin/helm && helm init -c && helm repo add urbit http://charts.urb-it.io \
-&& go get github.com/urbitassociates/cli53 ;\
-    cd $GOPATH/src/github.com/urbitassociates/cli53 ;\
-    make install \
+&& python3 -m ensurepip \
+&& python -m ensurepip \
+&& rm -r /usr/lib/python*/ensurepip \
+&& pip3 install --upgrade pip setuptools \
+&& rm -r /root/.cache \
 && pip install \
     supervisor==$SUPERVISOR_VERSION \
     supervisor-stdout \
+&& pip3 install \
     redis \
-    enum34 \
+    pymongo[tls] \
 && apk --no-cache del \
     wget \
     openssl-dev \
-    tar \
-    gcc \
-    g++ \
-    git \
-    make \
-    cmake \
-    unzip \
-    go \
-&& rm -rf /var/cache/apk/* /tmp/* $GOPATH/src
+&& rm -rf /var/cache/apk/* /tmp/*
 
-WORKDIR /var/application
+WORKDIR /usr/local/worker
 
 ENTRYPOINT ["/bin/sh", "-c", "supervisord", "--nodaemon" ,"--configuration /etc/supervisord.conf"]
