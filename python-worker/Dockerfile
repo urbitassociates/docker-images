@@ -3,7 +3,7 @@ FROM alpine:3.4
 MAINTAINER Urb-it AB <teknik@urb-it.com>
 
 ENV SUPERVISOR_VERSION=3.3.3
-
+COPY requirements.txt .
 ADD ./worker.conf /etc/supervisord.conf
 
 # Install dependencies
@@ -28,11 +28,7 @@ RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
 && pip install \
     supervisor==$SUPERVISOR_VERSION \
     supervisor-stdout \
-&& pip3 install \
-    redis \
-    pymongo[tls] \
-    redlock-py \
-    pika \
+&& pip3 install -r requirements.txt \
 && apk --no-cache del \
     wget \
     openssl-dev \
