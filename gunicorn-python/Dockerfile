@@ -16,7 +16,7 @@ RUN apk --update add --virtual build-dependencies \
         --repository http://dl-3.alpinelinux.org/alpine/edge/community/ --allow-untrusted \
         --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
-    && pip install -r requirements.txt
+    && pip3 install -r requirements.txt
 
 # Remove dependencies & clean up
 RUN apk --no-cache del \
