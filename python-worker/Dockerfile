@@ -31,6 +31,8 @@ RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
 && pip3 install \
     redis \
     pymongo[tls] \
+    redlock-py \
+    pika \
 && apk --no-cache del \
     wget \
     openssl-dev \
