@@ -1,0 +1,4 @@
+redis==2.10.6
+pymongo[tls]==3.6.0
+redlock-py==1.0.8
+pika==0.11.2
