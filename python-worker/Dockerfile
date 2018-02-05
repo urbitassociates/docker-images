@@ -28,11 +28,7 @@ RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
 && pip install \
     supervisor==$SUPERVISOR_VERSION \
     supervisor-stdout \
-&& pip3 install \
-    redis \
-    pymongo[tls] \
-    redlock-py \
-    pika \
+&& pip3 install -r requirements.txt \
 && apk --no-cache del \
     wget \
     openssl-dev \
