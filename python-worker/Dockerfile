@@ -3,7 +3,7 @@ FROM alpine:3.4
 MAINTAINER Urb-it AB <teknik@urb-it.com>
 
 ENV SUPERVISOR_VERSION=3.3.3
-
+COPY requirements.txt .
 ADD ./worker.conf /etc/supervisord.conf
 
 # Install dependencies
