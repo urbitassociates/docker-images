@@ -4,6 +4,7 @@ MAINTAINER Jonas Odencrants <jonas.odencrants@urbit.com>
 
 COPY requirements.txt .
 COPY pep8 /root/.config/pep8
+COPY flake8 /root/.config/flake8
 # Install dependencies
 
 RUN apk --update add --virtual build-dependencies \
