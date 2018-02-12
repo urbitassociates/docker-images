@@ -31,7 +31,7 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$
     autoconf \
     build-base \
     ca-certificates \
-&& apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/main/ add \
+&& apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/v3.5/main/ add \
     curl \
     openssl \
     openssl-dev \
@@ -46,7 +46,7 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$
     libjpeg-turbo-dev \
     imagemagick-dev \
     imagemagick \
-&& apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
+&& apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/v3.5/community/ add \
     php7-gd \
     php7-sockets \
     php7-zlib \
