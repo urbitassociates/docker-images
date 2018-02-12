@@ -3,7 +3,7 @@ FROM quay.io/urbit/gunicorn-python:latest
 MAINTAINER Jonas Odencrants <jonas.odencrants@urbit.com>
 
 COPY requirements.txt .
-
+COPY pep8 /root/.config/pep8
 # Install dependencies
 
 RUN apk --update add --virtual build-dependencies \
