@@ -30,7 +30,9 @@ RUN cd /tmp \
 && make clean \
 && make install .
 
-RUN /usr/bin/luarocks install mongorover && /usr/bin/luarocks install rapidjson
+RUN /usr/bin/luarocks install mongorover \
+&& /usr/bin/luarocks install rapidjson \
+&& /usr/bin/luarocks install date
 # Cleanup
 RUN apk --no-cache del wget lua5.1-dev openssl-dev tar luarocks5.1 g++ make cmake  \
 && rm -rf /var/cache/apk/* /tmp/*
