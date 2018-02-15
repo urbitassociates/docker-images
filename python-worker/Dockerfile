@@ -5,6 +5,7 @@ MAINTAINER Urb-it AB <teknik@urb-it.com>
 ENV SUPERVISOR_VERSION=3.3.3
 
 ADD ./worker.conf /etc/supervisord.conf
+COPY requirements.txt .
 
 # Install dependencies
 RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
@@ -24,15 +25,11 @@ RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
 && python -m ensurepip \
 && rm -r /usr/lib/python*/ensurepip \
 && pip3 install --upgrade pip setuptools \
-&& rm -r /root/.cache \
+&& pip3 install -r requirements.txt \
 && pip install \
     supervisor==$SUPERVISOR_VERSION \
     supervisor-stdout \
-&& pip3 install \
-    redis \
-    pymongo[tls] \
-    redlock-py \
-    pika \
+&& rm -r /root/.cache \
 && apk --no-cache del \
     wget \
     openssl-dev \
