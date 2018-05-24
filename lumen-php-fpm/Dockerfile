@@ -1,6 +1,6 @@
 FROM php:7.1-fpm-alpine
 
-MAINTAINER Simon Forsman <simon@urb-it.com>
+MAINTAINER Moose wings <pd@urb-it.com>
 
 # PHP
 ADD ./logging.ini /usr/local/etc/php/conf.d
