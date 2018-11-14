@@ -1,8 +1,8 @@
-FROM quay.io/urbit/drone-kubernetes-helm:latest
+FROM mandrean/drone-kubernetes-helm:v0.3.0-k8s-v1.6-4-helm-v2.4.2
 
 # Environment variables
-ARG K8S_VERSION=1.7.5
-ARG HELM_VERSION=2.6.2
+ARG K8S_VERSION=1.9.3
+ARG HELM_VERSION=2.9.1
 ARG KUBE_PATH="/root/.kube/"
 
 # Install kubectl & helm
