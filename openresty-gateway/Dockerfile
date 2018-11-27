@@ -11,12 +11,12 @@ RUN mkdir -p /usr/local/api-gateway/nginx/conf.d && \
     chmod +x /etc/init.d/nginx
 
 # Install dependencies
-RUN echo http://dl-4.alpinelinux.org/alpine/edge/testing \
+RUN echo http://dl-4.alpinelinux.org/alpine/3.8/testing \
 >> /etc/apk/repositories \
-&& echo http://dl-4.alpinelinux.org/alpine/edge/main \
+&& echo http://dl-4.alpinelinux.org/alpine/3.8/main \
 >> /etc/apk/repositories \
 && apk --no-cache --update add \
-   nettle nettle-dev gcc lua5.1-dev curl perl luarocks5.1 openssl-dev tar g++ make openssl cmake \
+   nettle nettle-dev gcc lua5.1-dev curl perl luarocks5.1 openssl-dev tar g++ make openssl cmake tzdata \
 && ln -s /usr/bin/luarocks-5.1 /usr/bin/luarocks
 
 # mongo-c-driver libbson 1.5.2
@@ -32,7 +32,8 @@ RUN cd /tmp \
 
 RUN /usr/bin/luarocks install mongorover \
 && /usr/bin/luarocks install rapidjson \
-&& /usr/bin/luarocks install date
+&& /usr/bin/luarocks install date \
+&& /usr/bin/luarocks install luatz
 # Cleanup
 RUN apk --no-cache del wget lua5.1-dev openssl-dev tar luarocks5.1 g++ make cmake  \
 && rm -rf /var/cache/apk/* /tmp/*
