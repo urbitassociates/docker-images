@@ -4,7 +4,19 @@ Urb-it Docker Images
 These are Urb-it's Docker images, used mainly for internal development.
 
 ## Docker Snippets
-Useful snippets for cleanups etc.
+Useful snippets for building, tagging, cleanups etc.
+
+#### Build and tag a docker image
+```
+docker build {FOLDER_CONTAINING_DOCKERFILE} -t {repository}/{imagename}:{tag}
+docker build ./ -t quay.io/urbit/fluentd-loggly:1.2
+```
+
+#### Push a tagged docker image to a repository (i.e, quay.io)
+```
+docker push {repository}/{imagename}:{tag}
+docker push quay.io/urbit/fluentd-loggly:1.2
+```
 
 #### Stop all containers
 ```
