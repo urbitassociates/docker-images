@@ -3,6 +3,9 @@ Urb-it Docker Images
 
 These are Urb-it's Docker images, used mainly for internal development.
 
+quay.io builds and tags these images with the "latest" tag when the master branch is updated
+If you want a specific tag (i.e, a version number) you have to build, tag and push the image manually
+
 ## Docker Snippets
 Useful snippets for building, tagging, cleanups etc.
 
