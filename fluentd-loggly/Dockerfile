@@ -27,12 +27,12 @@ RUN yum update -y \
 
     # http://www.fluentd.org/plugins
     && td-agent-gem install --no-document \
-        fluent-plugin-kubernetes_metadata_filter:0.26.2 \
+        fluent-plugin-kubernetes_metadata_filter:2.2.0 \
         fluent-plugin-loggly:0.0.9 \
         fluent-plugin-grok-parser:2.1.4 \
         fluent-plugin-record-modifier:0.5.0 \
         fluent-plugin-mutate_filter:0.2.0 \
-
+        fluent-plugin-elasticsearch:3.5.2 \
     && yum remove -y sudo \
     && rm -rf /opt/td-agent/embedded/lib/ruby/gems/2.1.0/gems/json-1.8.1
 
