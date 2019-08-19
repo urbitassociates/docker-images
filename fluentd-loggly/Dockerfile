@@ -34,6 +34,7 @@ RUN yum update -y \
         fluent-plugin-mutate_filter:0.2.0 \
         fluent-plugin-multi-format-parser:1.0.0 \
         fluent-plugin-elasticsearch:3.5.2 \
+        fluent-plugin-flatten-hash:0.5.1 \
     && yum remove -y sudo \
     && rm -rf /opt/td-agent/embedded/lib/ruby/gems/2.1.0/gems/json-1.8.1
 
