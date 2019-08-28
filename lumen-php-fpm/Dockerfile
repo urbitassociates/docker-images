@@ -1,4 +1,4 @@
-FROM php:7.1-fpm-alpine
+FROM php:7.1-fpm-alpine3.10
 
 MAINTAINER Moose wings <pd@urb-it.com>
 
@@ -11,11 +11,11 @@ ADD ./lumen.pool.conf /usr/local/etc/php-fpm.d
 RUN rm /usr/local/etc/php-fpm.d/www.conf*
 
 # Environment variables
-ENV ALPINE_VERSION 3.4
+ENV ALPINE_VERSION 3.10
 ENV PHP_API_VERSION 20160303
 ENV IMAGICK_VERSION=3.4.3
 # ENV AMQP_VERSION=1.8.0
-ENV MONGODB_VERSION=1.2.5
+ENV MONGODB_VERSION=1.5.5
 ENV LOG_STREAM="/tmp/stdout"
 
 # Install & clean up dependencies
