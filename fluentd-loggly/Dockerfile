@@ -19,7 +19,7 @@ RUN yum update -y \
     && yum install -y sudo ruby-devel \
     
     # Install fluentd
-    && curl -sSL https://toolbelt.treasuredata.com/sh/install-redhat-td-agent2.sh | sh \
+    && curl -sSL https://toolbelt.treasuredata.com/sh/install-redhat-td-agent3.sh | sh \
 
     # Change the default user and group to root.
     # Needed to allow access to /var/log/docker/... files.
@@ -27,7 +27,7 @@ RUN yum update -y \
 
     # http://www.fluentd.org/plugins
     && td-agent-gem install --no-document \
-        fluent-plugin-kubernetes_metadata_filter:2.2.0 \
+        fluent-plugin-kubernetes_metadata_filter:2.3.0 \
         fluent-plugin-loggly:0.0.9 \
         fluent-plugin-grok-parser:2.1.4 \
         fluent-plugin-record-modifier:0.5.0 \
