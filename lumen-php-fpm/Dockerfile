@@ -1,10 +1,12 @@
-FROM php:7.1-fpm-alpine3.10
+FROM php:7.3-fpm-alpine3.10
 
 MAINTAINER Moose wings <pd@urb-it.com>
 
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
 # PHP
-ADD ./logging.ini /usr/local/etc/php/conf.d
-ADD ./lumen.ini /usr/local/etc/php/conf.d
+ADD ./logging.ini $PHP_INI_DIR/conf.d
+ADD ./lumen.ini $PHP_INI_DIR/conf.d
 
 # PHP-FPM
 ADD ./lumen.pool.conf /usr/local/etc/php-fpm.d
@@ -76,9 +78,7 @@ RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$
     libtool \
 && rm -rf /var/cache/apk/* /tmp/*
 
-RUN mkfifo $LOG_STREAM && chmod 777 $LOG_STREAM
-
-CMD sh -c "php-fpm -D | tail -f $LOG_STREAM"
+CMD sh -c "php-fpm"
 
 WORKDIR /var/www/application
 
