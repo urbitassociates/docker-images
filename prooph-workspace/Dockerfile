@@ -1,12 +1,11 @@
-FROM php:7.1-cli-alpine
+FROM php:7.1-cli-alpine3.10
 
 MAINTAINER Simon Forsman <simon@urb-it.com>
 
 ENV RABBITMQ_VERSION v0.8.0
-ENV PHP_AMQP_VERSION v1.9.3
+ENV PHP_AMQP_VERSION v1.9.4
 ENV PHP_REDIS_VERSION 3.1.4
-ENV PHP_ZEROMQ_VERSION master
-ENV PHP_MONGO_VERSION 1.2.5
+ENV PHP_MONGO_VERSION 1.6.1
 
 # persistent / runtime deps
 ENV PHPIZE_DEPS \
@@ -28,7 +27,8 @@ RUN apk add --no-cache --virtual .persistent-deps \
     # for mcrypt extension
     libmcrypt-dev \
     # for mongodb
-    libssl1.0 \
+    libressl \
+    libressl-dev \
     # for zero mq
     libsodium-dev \
     # for postgres
@@ -46,16 +46,13 @@ RUN set -xe \
     && docker-php-ext-configure intl --enable-intl \
     && docker-php-ext-configure pcntl --enable-pcntl \
     && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
-    && docker-php-ext-configure pdo_pgsql --with-pgsql \
     && docker-php-ext-configure mbstring --enable-mbstring \
     && docker-php-ext-configure soap --enable-soap \
     && docker-php-ext-install \
         bcmath \
         intl \
-        mcrypt \
         pcntl \
         pdo_mysql \
-        pdo_pgsql \
         mbstring \
         soap \
     && git clone --branch ${RABBITMQ_VERSION} https://github.com/alanxz/rabbitmq-c.git /tmp/rabbitmq \
@@ -71,16 +68,8 @@ RUN set -xe \
         && ./configure  \
         && make  \
         && make install \
-        && make test \
     && git clone --branch ${PHP_REDIS_VERSION} https://github.com/phpredis/phpredis /tmp/phpredis \
         && cd /tmp/phpredis \
-        && phpize  \
-        && ./configure  \
-        && make  \
-        && make install \
-        && make test \
-    && git clone --branch ${PHP_ZEROMQ_VERSION} https://github.com/mkoppanen/php-zmq /tmp/php-zmq \
-        && cd /tmp/php-zmq \
         && phpize  \
         && ./configure  \
         && make  \
@@ -103,7 +92,6 @@ RUN set -xe \
 COPY config/php-cli.ini /usr/local/etc/php/php.ini
 COPY config/php7.ini /usr/local/etc/php/conf.d/
 COPY config/amqp.ini /usr/local/etc/php/conf.d/
-COPY config/zmq.ini /usr/local/etc/php/conf.d/
 COPY config/redis.ini /usr/local/etc/php/conf.d/
 COPY config/mongodb.ini /usr/local/etc/php/conf.d/
 
