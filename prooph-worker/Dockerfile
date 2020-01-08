@@ -1,36 +1,27 @@
-FROM php:7.2-rc-alpine
+FROM php:7.3-alpine3.10
 
-MAINTAINER Simon Forsman <simon@urb-it.com>
+MAINTAINER Urbit <pd@urb-it.com>
 
 # Add configs
 ADD ./prooph.ini /usr/local/etc/php/conf.d
 ADD ./worker.conf /etc/supervisor/worker.conf
 
 # Environment variables
-ENV ALPINE_VERSION 3.4
+ENV ALPINE_VERSION 3.10
 ENV PHP_API_VERSION 20160303
-ENV NEWRELIC_VERSION 7.0.0.186
-ENV PYTHON_VERSION=2.7.12-r0
-ENV PY_PIP_VERSION=8.1.2-r0
+ENV PYTHON_VERSION=2.7.16-r1
+ENV PY_PIP_VERSION=18.1-r0
 ENV SUPERVISOR_VERSION=3.3.1
-ENV MONGODB_VERSION=1.2.9
-ENV PHP_AMQP_VERSION=1.9.1
-
-# Download & Install New Relic
-RUN curl -#SL https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-$NEWRELIC_VERSION-linux-musl.tar.gz | tar xzf - \
-&& mkdir -p /usr/local/lib/php/extensions/no-debug-non-zts-$PHP_API_VERSION \
-&& mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/agent/x64/newrelic-$PHP_API_VERSION.so /usr/local/lib/php/extensions/no-debug-non-zts-$PHP_API_VERSION/newrelic.so \
-&& mv ./newrelic-php5-$NEWRELIC_VERSION-linux-musl/daemon/newrelic-daemon.x64 /usr/bin/newrelic-daemon \
-&& chmod 775 /usr/bin/newrelic-daemon \
-&& mkdir /var/log/newrelic
+ENV MONGODB_VERSION=1.6.1
+ENV PHP_AMQP_VERSION=1.9.4
 
 # Install & clean up dependencies
 RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main/ add \
     autoconf \
     build-base \
     ca-certificates \
-    python=$PYTHON_VERSION \
-    py-pip=$PY_PIP_VERSION \
+    python2=$PYTHON_VERSION \
+    py2-pip=$PY_PIP_VERSION \
 && apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/main/ add \
     curl \
     libressl \
