@@ -28,7 +28,9 @@ RUN apk --update add --virtual build-dependencies \
         --repository http://dl-3.alpinelinux.org/alpine/edge/main --allow-untrusted \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && pip install gunicorn \
-    && pip install gevent
+    && pip install gevent \
+    && pip install cython \
+    && pip install numpy 
     
 # Remove dependencies & clean up
 RUN apk --no-cache del \
