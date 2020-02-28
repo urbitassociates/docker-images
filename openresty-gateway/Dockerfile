@@ -1,4 +1,6 @@
-FROM openresty/openresty:alpine
+# The first part of the OpenResty release version numbers is the version of the bundled NGINX core.
+# In this case OpenResty 1.13.6.2 bundles NGINX 1.13.6
+FROM openresty/openresty:1.13.6.2-alpine
 
 MAINTAINER Jonas Odencrants <jonas.odencrants@urbit.com>
 
