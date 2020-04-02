@@ -21,6 +21,13 @@ RUN echo http://dl-4.alpinelinux.org/alpine/3.8/testing \
     nettle nettle-dev gcc lua5.1-dev curl perl luarocks5.1 openssl-dev tar g++ make openssl cmake tzdata \
     && ln -s /usr/bin/luarocks-5.1 /usr/bin/luarocks
 
+# Install opentracing and jaeger-client
+RUN cd /usr/local/openresty/nginx/modules \
+    && wget -O - https://github.com/opentracing-contrib/nginx-opentracing/releases/download/v0.9.0/linux-amd64-nginx-1.13.6-ngx_http_module.so.tgz \
+    | tar zxf - \
+    && cd /usr/local/lib \
+    && wget -O libjaegertracing_plugin.so https://github.com/jaegertracing/jaeger-client-cpp/releases/download/v0.4.2/libjaegertracing_plugin.linux_amd64.so
+
 # mongo-c-driver libbson 1.5.2
 RUN cd /tmp \
     && curl -L -O https://github.com/mongodb/mongo-c-driver/releases/download/1.6.0/mongo-c-driver-1.6.0.tar.gz \
