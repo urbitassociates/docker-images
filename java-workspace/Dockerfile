@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	libelf-dev \
 	nodejs \
 	git \
+	build-essential \
 && npm i -g \
 	yarn@$YARN_VERSION \
 && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
