@@ -1,6 +1,6 @@
 FROM openjdk:8-jre
 
-MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
+LABEL maintainer="pd@urbit.com"
 
 # Environment variables
 ENV YARN_VERSION 1.0.2
