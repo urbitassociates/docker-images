@@ -15,8 +15,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	nodejs \
 	git \
 	build-essential \
-&& npm i -g \
+	&& npm i -g \
 	yarn@$YARN_VERSION \
-&& rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+	&& rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+
+# Set /usr/bin/python to be v3.7
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 
 WORKDIR /home
