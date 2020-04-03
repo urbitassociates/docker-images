@@ -1,12 +1,12 @@
-FROM openjdk:8-jre
+FROM openjdk:8-jre-buster
 
-MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
+LABEL maintainer="pd@urbit.com"
 
 # Environment variables
 ENV YARN_VERSION 1.0.2
 
 # Add nodejs repo
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 
 # Install & clean up dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -14,8 +14,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	libelf-dev \
 	nodejs \
 	git \
-&& npm i -g \
+	build-essential \
+	&& npm i -g \
 	yarn@$YARN_VERSION \
-&& rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+	&& rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+
+# Set /usr/bin/python to be v3.7
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 
 WORKDIR /home
