@@ -12,6 +12,8 @@ ADD ./lumen.ini $PHP_INI_DIR/conf.d
 ADD ./lumen.pool.conf /usr/local/etc/php-fpm.d
 RUN rm /usr/local/etc/php-fpm.d/www.conf*
 
+RUN sed -i "s|;process_control_timeout = 0|process_control_timeout = 30|g" $PHP_INI_DIR/../php-fpm.conf
+
 # Environment variables
 ENV ALPINE_VERSION 3.10
 ENV PHP_API_VERSION 20160303
