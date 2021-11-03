@@ -1,4 +1,4 @@
-FROM nginx:stable-alpine
+FROM nginx:1.20.1-alpine
 
 COPY auto-reload-nginx.sh /home/auto-reload-nginx.sh
 COPY nginx.conf /etc/nginx/
