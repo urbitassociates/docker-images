@@ -1,7 +1,5 @@
 FROM nginx:stable-alpine
 
-MAINTAINER Denis Koltsov <denis@urbit.com>
-
 COPY auto-reload-nginx.sh /home/auto-reload-nginx.sh
 COPY nginx.conf /etc/nginx/
 COPY default.conf /etc/nginx/conf.d/default.conf
