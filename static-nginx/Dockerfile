@@ -1,6 +1,4 @@
-FROM nginx:stable-alpine
-
-MAINTAINER Denis Koltsov <denis@urbit.com>
+FROM nginx:1.20.1-alpine
 
 COPY auto-reload-nginx.sh /home/auto-reload-nginx.sh
 COPY nginx.conf /etc/nginx/
@@ -18,7 +16,8 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
 && rm -rf /var/cache/apk/* /tmp/*
 
 # Set up user
-RUN addgroup -S www-data \
+RUN (delgroup www-data || true) && \
+addgroup -S www-data \
 && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx www-data \
 && usermod -u 1000 www-data
 
