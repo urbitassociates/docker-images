@@ -1,6 +1,4 @@
-FROM openresty/openresty:alpine
-
-MAINTAINER Jonas Odencrants <jonas.odencrants@urbit.com>
+FROM openresty/openresty:1.17.8.2-5-alpine
 
 # Copy files & set permissions
 COPY nginx.conf /usr/local/openresty/nginx/conf/
@@ -42,5 +40,5 @@ RUN opm install chunpu/shim pintsized/lua-resty-http sumory/lor bungle/lua-resty
 
 WORKDIR /usr/local/api-gateway
 
-EXPOSE 80 443
+EXPOSE 8080
 
