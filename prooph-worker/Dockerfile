@@ -15,6 +15,9 @@ ENV SUPERVISOR_VERSION=3.3.1
 ENV MONGODB_VERSION=1.6.1
 ENV PHP_AMQP_VERSION=1.9.4
 
+ARG UID=1000
+ARG GID=2000
+
 # Install & clean up dependencies
 RUN apk --no-cache --update --repository http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main/ add \
     autoconf \
@@ -66,4 +69,9 @@ RUN pip install supervisor==$SUPERVISOR_VERSION
 
 WORKDIR /var/www/application
 
+RUN && addgroup -g $GID -S prooph || true \
+    && adduser -u $UID -D -S -h /var/cache/nginx -s /sbin/nologin -G prooph prooph || true
+
+USER prooph
+RUN touch /var/www/application/supervisord.log
 CMD sh -c "supervisord --nodaemon --configuration /etc/supervisor/worker.conf"
