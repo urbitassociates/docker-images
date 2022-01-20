@@ -1,8 +1,9 @@
-FROM nginx:1.10.0-alpine
-
-MAINTAINER Sebastian Mandrean <sebastian@urb-it.com>
+FROM nginx:1.21.5-alpine
 
 ARG PHP_UPSTREAM=php-fpm
+
+ARG UID=1000
+ARG GID=2000
 
 COPY auto-reload-nginx.sh /home/auto-reload-nginx.sh
 COPY nginx.conf /etc/nginx/
@@ -22,12 +23,22 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
 && rm -rf /var/cache/apk/* /tmp/*
 
 # Set up user
-RUN addgroup -S www-data \
-&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx www-data \
-&& usermod -u 1000 www-data
+
+RUN deluser nginx || true \
+    && delgroup nginx || true \
+    && addgroup -g $GID -S nginx || true \
+    && adduser -u $UID -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx || true
+
+RUN chown nginx /home/auto-reload-nginx.sh \
+    && chown -R $UID:0 /var/cache/nginx \
+    && chmod -R g+w /var/cache/nginx \
+    && chown -R $UID:0 /etc/nginx \
+    && chmod -R g+w /etc/nginx
 
 CMD ["/home/auto-reload-nginx.sh"]
 
 WORKDIR /var/www/application
 
-EXPOSE 80 443
+USER nginx
+
+EXPOSE 8080
