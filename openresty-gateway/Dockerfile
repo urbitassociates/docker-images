@@ -1,5 +1,13 @@
 FROM openresty/openresty:1.17.8.2-5-alpine
 
+ARG UID=1000
+ARG GID=2000
+
+RUN deluser nginx || true \
+    && delgroup nginx || true \
+    && addgroup -g $GID -S nginx || true \
+    && adduser -u $UID -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx || true
+
 # Copy files & set permissions
 COPY nginx.conf /usr/local/openresty/nginx/conf/
 COPY init-d-nginx /etc/init.d/nginx
@@ -39,6 +47,10 @@ RUN apk --no-cache del wget lua5.1-dev openssl-dev tar luarocks5.1 g++ make cmak
 RUN opm install chunpu/shim pintsized/lua-resty-http sumory/lor bungle/lua-resty-nettle SkyLothar/lua-resty-jwt
 
 WORKDIR /usr/local/api-gateway
+
+RUN chown -R $UID:0 /usr/local/openresty/nginx
+
+USER nginx
 
 EXPOSE 8080
 
