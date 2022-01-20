@@ -6,6 +6,9 @@ COPY default.conf /etc/nginx/conf.d/default.conf
 
 RUN chmod +x /home/auto-reload-nginx.sh
 
+ARG UID=1000
+ARG GID=2000
+
 # Install & clean up dependencies
 RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/community/ add \
     curl \
@@ -16,10 +19,16 @@ RUN apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge
 && rm -rf /var/cache/apk/* /tmp/*
 
 # Set up user
-RUN (delgroup www-data || true) && \
-addgroup -S www-data \
-&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx www-data \
-&& usermod -u 1000 www-data
+RUN deluser nginx || true \
+    && delgroup nginx || true \
+    && addgroup -g $GID -S nginx || true \
+    && adduser -u $UID -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx || true
+
+RUN chown nginx /home/auto-reload-nginx.sh \
+    && chown -R $UID:0 /var/cache/nginx \
+    && chmod -R g+w /var/cache/nginx \
+    && chown -R $UID:0 /etc/nginx \
+    && chmod -R g+w /etc/nginx
 
 # Set up logging
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
@@ -29,4 +38,6 @@ CMD ["/home/auto-reload-nginx.sh"]
 
 WORKDIR /var/www/application
 
-EXPOSE 80
+USER nginx
+
+EXPOSE 8080
