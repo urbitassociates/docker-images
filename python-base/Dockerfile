@@ -1,7 +1,6 @@
-FROM python:3.6-alpine3.10
+FROM python:3.9-alpine3.17
 
-# Lock pip to version 9
-RUN python -m pip install -U 'pip>=9,<10'
+RUN python -m pip install --upgrade pip
 
 # Install dependencies
 RUN apk --update add \
@@ -12,7 +11,7 @@ RUN apk --update add \
     gdal \
     geos \
     --update-cache \
-    --repository http://dl-3.alpinelinux.org/alpine/3.10/community --allow-untrusted \
+    --repository http://dl-3.alpinelinux.org/alpine/v3.17/community --allow-untrusted \
     --repository http://dl-3.alpinelinux.org/alpine/edge/community --allow-untrusted \
     --repository http://dl-3.alpinelinux.org/alpine/edge/testing --allow-untrusted \
     --repository http://dl-3.alpinelinux.org/alpine/edge/main --allow-untrusted
@@ -22,7 +21,7 @@ RUN apk --update add --virtual build-dependencies \
         gdal-dev \
         geos-dev \
         --update-cache \
-        --repository http://dl-3.alpinelinux.org/alpine/3.10/community --allow-untrusted \
+        --repository http://dl-3.alpinelinux.org/alpine/v3.17/community --allow-untrusted \
         --repository http://dl-3.alpinelinux.org/alpine/edge/community --allow-untrusted \
         --repository http://dl-3.alpinelinux.org/alpine/edge/testing --allow-untrusted \
         --repository http://dl-3.alpinelinux.org/alpine/edge/main --allow-untrusted \
